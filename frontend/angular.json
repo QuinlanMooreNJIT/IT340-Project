@@ -3,7 +3,7 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "analytics": "0f9b3d18-de38-40c9-95fc-3f28d60d0690"
+    "analytics": "fdbc7373-a72e-4d9d-a0cf-0a2d7f1f2ced"
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -65,8 +65,7 @@
           "builder": "@angular/build:dev-server",
 		"options": {
 			"host": "0.0.0.0",
-			"port": 4200,
-			"allowedHosts": ["192.168.75.136"]
+			"allowedHosts": ["*"]
 			}
           "configurations": {
             "production": {
