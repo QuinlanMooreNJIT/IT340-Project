@@ -8,18 +8,31 @@ app.use(express.json());
 
 const port = 3000;
 
-const mongoURI = "mongodb://192.168.75.137/27017/testdb";
+const mongoURI = "mongodb://192.168.75.137:27017/testdb";
 
 mongoose.connect(mongoURI)
     .then(() => console.log("Conected to MongoDB"))
     .catch(err => console.log("MongoDB Connection error:", err));
+    
+const userSchema = new mongoose.Schema({
+    name: String,
+    age: Number
+});
 
+const User = mongoose.model('User', userSchema);
 
 app.get('/', (req, res) => res.send('Backend is running!'));
 
 app.get('/users', async (req, res) => {
-	const users = await mongoose.connection.db.collection("users").find().toArray();
-	res.json(users);
+    try {
+        const users = await User.find()
+        res.json(users);
+    } catch (err) {
+        console.error("ERROR", err);
+        res.status(500).send("Error fetching users");
+    }
 });
 
-app.listen(port, () => console.log(`Server running on port ${port}`));
+app.listen(port, '0.0.0.0', () => {
+    console.log('Server running on post ${port}');
+});
