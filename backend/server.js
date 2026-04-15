@@ -6,6 +6,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+const authRoutes = require("./routes/auth");
+
+app.use("/api/auth", authRoutes)
+
 const port = 3000;
 
 const mongoURI = "mongodb://192.168.75.137:27017/testdb";
@@ -34,5 +38,5 @@ app.get('/users', async (req, res) => {
 });
 
 app.listen(port, '0.0.0.0', () => {
-    console.log('Server running on post ${port}');
+    console.log(`Server running on port ${port}`);
 });
