@@ -1,2 +1,27 @@
-<h1>Home page</h1>
-<p>Welcome to the Musicians Marketplace!</p>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home</title>
+  <link rel="stylesheet" href="../app.css">
+</head>
+
+<body>
+  <h1>Welcome</h1>
+  
+  <p>You Are Logged In!</p>
+  
+  <br></br>
+  <button onClick="logout()">Logout</button>
+  <script>
+    const token = localStorage.getItem("token");
+    
+    if (!token) {
+      window.location.href = "login.html";
+    }
+    function logout() {
+      localStorage.removeItem("token");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>

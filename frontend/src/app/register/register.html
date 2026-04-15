@@ -1,1 +1,46 @@
-<p>register works!</p>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+  <link rel="stylesheet" href="../app.css">
+</head>
+
+<body>
+  <h2>Register</h2>
+
+  <form id="registerForm">
+    <input [(ngModel)]="username" name="username" required/>
+    <input (ngModel)]="password" name="password" type="Password" required/>
+    <button type="submit">Create Account</button>
+  </form>
+
+<p {{ message }}></p>
+
+<script>
+document.getElementById("registerForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+
+  const res = await fetch("http://192.168.75.135:3000/api/auth/register", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ username, password })
+  });
+
+  const data = await res.json();
+  document.getElementById("message").innerText = data.message || data.eror;
+  
+  if(res.ok) {
+    setTimeout(() => {
+      window.location.href = 'login.html";
+    }, 1000); 
+  }
+});
+</script>
+
+</body>
+</html>
