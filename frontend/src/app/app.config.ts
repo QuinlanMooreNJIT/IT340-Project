@@ -1,15 +1,15 @@
 import {ApplicationConfig } from '@angular/core';
-import {provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { AppRoutes } from './app.routes';
-import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
+import { routes } from './app.routes';
 
+import { importProvidersFrom } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-  provideHttpClient(),
-    provideBrowserGlobalErrorListeners(),
-    provideRouter(AppRoutes), provideClientHydration(withEventReplay())
+    provideHttpClient(),
+    provideRouter(routes), 
+    importProvidersFrom(FormsModule)
   ]
 };
