@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../services/auth.services';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
   standalone: true,
+  imports: [FormsModule],
   templateUrl: '/login.html',
 })
 
@@ -16,9 +18,9 @@ export class LoginComponent {
   constructor(private auth: AuthService, private router: Router) {}
   
   login() {
-    this.auth.login(this.username, this.password).subscrube({
+    this.auth.login(this.username, this.password).subscribe({
       next: (res: any) => {
-        locatlStorage.setItem('token', res.token);
+        localStorage.setItem('token', res.token);
         this.router.navigate(['/home']);
       },
       error: () => {
