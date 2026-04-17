@@ -1,10 +1,31 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  templateUrl: './login.html',
-  styleUrls: ['./login.css']
+  imports: [FormsModule],
+  templateUrl: `./login.component.html`,
 })
 
-export class LoginComponent { }
+export class LoginComponent { 
+  username = '';
+  password = '';
+  message = '';
+  
+  constructor(private auth: AuthService, private router: Router) {}
+  
+  login() {
+    this.auth.login(this.username, this.password).subscribe({
+      next: (res: any) => {
+        localStorage.setItem('token', res.token);
+        this.router.navigate(['/home']);
+      },
+      error: () => {
+        this.message = "Invalid Credentials";
+      }
+    });
+  }
+}

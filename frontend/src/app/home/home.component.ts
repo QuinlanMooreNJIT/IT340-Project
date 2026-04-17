@@ -3,8 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-home',
   standalone: true,
-  templateUrl: './home.html',
-  styleUrls: ['./home.css']
+  templateUrl: '/home.component.html',
 })
 
 export class HomeComponent { }
