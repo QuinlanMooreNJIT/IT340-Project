@@ -20,7 +20,7 @@ export class AuthService {
   
   login(username: string, password: string) {
     return this.http.post<{ token: string }> (
-    `${this.baseUrl}/login`
+    `${this.baseUrl}/login`,
     { username, password }
     ).pipe(
       tap((res) => {
@@ -37,6 +37,6 @@ export class AuthService {
   }
   
   isLoggedIn(): boolean {
-    return !!this.getToekn();
+    return !!this.getToken();
   }
 }
