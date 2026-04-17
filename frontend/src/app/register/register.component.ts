@@ -5,8 +5,9 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
-  templateUrl: '/register.html',
   standalone: true,
+  imports: [FormsModule],
+  templateUrl: '/register.component.html'
 })
 
 export class RegisterComponent { 
@@ -14,14 +15,15 @@ export class RegisterComponent {
   password = '';
   message = '';
   
-  constructor(private auth: AuthService, private router: Router) {}
-  
+  constructor(private auth: AuthService, private router: Router) {} 
   register() {
     this.auth.register(this.username, this.password).subscribe ({
       next: () => {
         this.router.navigate(['/login']);
       },
+      error: () => {
         this.message = 'Error Creating account';
+        }
     });
   }
 }
