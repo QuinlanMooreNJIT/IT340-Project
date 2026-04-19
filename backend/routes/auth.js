@@ -12,18 +12,17 @@ router.post("/register", async (req, res) => {
         if (existingUser) {
             return res.status(400).json({ message: "User already exists" });            
         }
-        
-        const hashedPassword = await bcrypt.hash(password, 10);
-        
+                
         const newUser = new User({
-            username: username,
-            password: hashedPassword
+            username,
+            password
         });
         
         await newUser.save();
         
         res.status(201).json({message: "User created successfully"});
     } catch (err) {
+        console.error("REGISTER ERROR:", err);
         res.status(500).json({ error: err.message});
     }
 });
@@ -43,7 +42,7 @@ router.post("/login", async (req, res) => {
         }
         
         const token = jwt.sign(
-        { if: user._id },
+        { id: user._id },
         "SECRET_KEY",
         { expiresIn: "1h"}
         );
@@ -54,6 +53,7 @@ router.post("/login", async (req, res) => {
         });
         
     } catch (error) {
+        console.error("LOGIN ERROR:", error);
         res.status(500).json({ error: error.message });
     }
 });
