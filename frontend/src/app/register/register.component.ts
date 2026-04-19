@@ -17,12 +17,18 @@ export class RegisterComponent {
   
   constructor(private auth: AuthService, private router: Router) {} 
   register() {
+  console.log("REGISTER CLICKED");
+  console.log("USERNAME:", this.username);
+  console.log("PASSWORD:", this.password);
     this.auth.register(this.username, this.password).subscribe ({
-      next: () => {
+      next: (res) => {
+      console.log("REGISTER SUCCESS: ", res);
         this.router.navigate(['/login']);
       },
-      error: () => {
-        this.message = 'Error Creating account';
+      error: (err) => {
+        console.log("REGISTER ERROR FULL:", err);
+        console.log("STATUS:", err.status);
+        console.log("BODY:", err.error);
         }
     });
   }
