@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-register',
   standalone: true,
   imports: [FormsModule],
+  styleUrls: ['./register.component.css'],
   templateUrl: '/register.component.html'
 })
 
