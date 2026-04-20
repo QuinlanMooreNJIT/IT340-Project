@@ -1,27 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Home</title>
-  <link rel="stylesheet" href="../app.css">
-</head>
+<h1>Welcome to the Musicians Marketplace!</h1>
 
-<body>
-  <h1>Welcome</h1>
-  
-  <p>You Are Logged In!</p>
-  
-  <br>
-  <button onClick="logout()">Logout</button>
-  <script>
-    const token = localStorage.getItem("token");
-    
-    if (!token) {
-      window.location.href = "login.html";
-    }
-    function logout() {
-      localStorage.removeItem("token");
-      window.location.href = "login.html";
-    }
-  </script>
-</body>
-</html>
+<div *ngIf="auth.isLoggedIn(); else loggedOut">
+  <p>You are logged in!</p>
+  <button (click)="logout()">Logout</button>
+</div>
+
+<ng-template #loggedOut>
+  <p>You are NOT Logged in.</p>
+  <a routerLink="/login">Go to Login</a>
+</ng-template>

@@ -18,12 +18,17 @@ export class LoginComponent {
   constructor(private auth: AuthService, private router: Router) {}
   
   login() {
+  console.log("LOGIN FUNCTION FIRED");
+  console.log("USERNAME:", this.username);
+  console.log("PASSWORD:", this.password);  
     this.auth.login(this.username, this.password).subscribe({
       next: (res: any) => {
-        localStorage.setItem('token', res.token);
+      console.log("LOGIN SUCCESS:", res);
+        
         this.router.navigate(['/home']);
       },
-      error: () => {
+      error: (err) => {
+      console.log("LOGIN ERROR:", err);
         this.message = "Invalid Credentials";
       }
     });
