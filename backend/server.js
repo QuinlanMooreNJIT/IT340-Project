@@ -2,10 +2,26 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
+const morgan = require('morgan');
+const fs = require('fs');
+const path = require('path');
+
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+const logDirectory = path.join(__dirname, 'logs');
+if (!fs.existsSync(logDirectory)) {
+    fs.mkdirSync(logDirectory);
+}
+
+const accessLogStream = fs.createWriteStream(
+    path.join(logDirectory, 'access.log'),
+    { flags: 'a' }
+);
+
+app.use(morgan('combined', { stream: accessLogStream }));
 
 const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes)
@@ -14,7 +30,7 @@ const authMiddleware = require("./middleware/authMiddleware");
 
 const port = 3000;
 
-const mongoURI = "mongodb://192.168.75.137:27017/testdb";
+const mongoURI = "mongodb://192.168.10.30:27017/testdb";
 
 mongoose.connect(mongoURI)
     .then(() => console.log("Conected to MongoDB"))

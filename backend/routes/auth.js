@@ -4,12 +4,17 @@ const jwt = require("jsonwebtoken");
 const router = express.Router();
 const User = require("../models/User");
 
+const logger = require("../logger");
+
 router.post("/register", async (req, res) => {
     try {
         const {username, password} = req.body;
         
+        logger.info(`REGISTER attempt: ${username} from ${req.ip}`);
+        
         const existingUser = await User.findOne({username});
         if (existingUser) {
+        logger.warn(`REGISTER FAILED (exists): ${username} from ${req.ip}`);
             return res.status(400).json({ message: "User already exists" });            
         }
                 
@@ -20,9 +25,12 @@ router.post("/register", async (req, res) => {
         
         await newUser.save();
         
+        logger.info(`REGISTER SUCCESS: ${username} from ${req.ip}`);
+        
         res.status(201).json({message: "User created successfully"});
+        
     } catch (err) {
-        console.error("REGISTER ERROR:", err);
+        logger.error(`REGISTER ERROR: ${err.message}`);
         res.status(500).json({ error: err.message});
     }
 });
@@ -31,13 +39,17 @@ router.post("/login", async (req, res) => {
     try {
         const { username, password } = req.body;
         
+        logger.info(`LOGIN attempt: ${username} form ${req.ip}`);
+        
         const user = await User.findOne({ username });
         if (!user) {
+            logger.warn(`LOGIN FAILED (no user): ${username} from ${req.ip}`);
             return res.status(400).json({ message: "Invalid credentials"});
         }
         
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
+            logger.warn(`LOGIN FAILED (bad password): ${username} from ${req.ip}`);
             return res.status(400).json({ message: "Invalid credentials"});
         }
         
@@ -47,13 +59,15 @@ router.post("/login", async (req, res) => {
         { expiresIn: "1h"}
         );
         
+        logger.info(`LOGIN SUCCESS: ${username} from ${req.ip}`);
+        
         res.json({
             message: "Login successful",
             token: token
         });
         
     } catch (error) {
-        console.error("LOGIN ERROR:", error);
+        logger.error(`LOGIN ERROR: ${error.message}`);
         res.status(500).json({ error: error.message });
     }
 });
