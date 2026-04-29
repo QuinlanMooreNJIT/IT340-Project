@@ -39,7 +39,7 @@ router.post("/login", async (req, res) => {
     try {
         const { username, password } = req.body;
         
-        logger.info(`LOGIN attempt: ${username} form ${req.ip}`);
+        logger.info(`LOGIN attempt: ${username} from ${req.ip}`);
         
         const user = await User.findOne({ username });
         if (!user) {
