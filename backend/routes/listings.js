@@ -7,18 +7,27 @@ router.get('/:id', async (req, res) => {
     try {
         const listing = await Listing.findById(req.params.id)
             .populate('postedBy', 'username')
+            .exec();
             
         if (!listing) {
             return res.status(404).json({ message: 'Listing not found' });
         }
+        
         res.json(listing);
+        
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.error(err);
+        res.status(500).json({ message: 'Server error fetching listing' });
     }
 });
 
 router.post('/', auth, async (req, res) => {
     try {
+    
+        if (!req.body.title || !req.body.description || !req.body.price || !req.body.category) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+        
         const newListing = new Listing({
             title: req.body.title,
             description: req.body.description,
@@ -26,14 +35,15 @@ router.post('/', auth, async (req, res) => {
             category: req.body.category,
             images: req.body.images || [],
             keywords: req.body.keywords || [],
-            postedBy: req.postedBy.id
+            postedBy: req.user.id
         });
         
         const saved = await newListing.save();
         res.status(201).json(saved);
         
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.error(err);
+        res.status(500).json({ message: 'Server error creating listing' });
     }
 });
 
