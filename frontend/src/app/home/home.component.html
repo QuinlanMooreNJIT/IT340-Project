@@ -44,7 +44,7 @@
   <input
     type="text"
     placeholder="Image URL"
-    [(ngModel)]="newListing.images[0]"
+    (input)="newListing.images = [$event.target.value]"
   />
   
   <input

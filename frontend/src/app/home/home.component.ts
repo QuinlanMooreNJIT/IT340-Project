@@ -57,9 +57,8 @@ export class HomeComponent implements OnInit {
       price: this.newListing.price,
       category: this.newListing.category,
       
-      images: Array.isArray(this.newListing.images)
-        ? this.newListing.images.filer(img => img.trim() !== '')
-        : [],
+      images: this.newListing.images
+        .filter(img => img && img.trim() !== ''),
       
       keywords: typeof this.newListing.keywords === 'string'
         ? this.newListing.keywords.split(',').map(k => k.trim())
@@ -75,7 +74,7 @@ export class HomeComponent implements OnInit {
         description: '',
         price: 0,
         category: 'instrument',
-        images: [''],
+        images: [],
         keywords: ''
         };
         
