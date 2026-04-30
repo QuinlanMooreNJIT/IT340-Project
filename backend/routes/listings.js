@@ -19,7 +19,7 @@ router.post('/', auth, async (req, res) => {
     try {
         const newListing = new Listing({
             title: req.body.title,
-            description: req.body.descrption,
+            description: req.body.description,
             price: req.body.price,
             category: req.body.category,
             user: req.user.id

@@ -12,6 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 const logDirectory = path.join(__dirname, 'logs');
+
 if (!fs.existsSync(logDirectory)) {
     fs.mkdirSync(logDirectory);
 }
@@ -26,15 +27,10 @@ app.use(morgan('combined', { stream: accessLogStream }));
 const authRoutes = require("./routes/auth");
 app.use("/api/auth", authRoutes)
 
+const listingsRoutes = require("./routes/listings");
+app.use("/api/listings", listingsRoutes);
+
 const authMiddleware = require("./middleware/authMiddleware");
-
-const port = 3000;
-
-const mongoURI = "mongodb://192.168.10.30:27017/testdb";
-
-mongoose.connect(mongoURI)
-    .then(() => console.log("Conected to MongoDB"))
-    .catch(err => console.log("MongoDB Connection error:", err));
 
 app.get('/', (req, res) => res.send('Backend is running!'));
 
@@ -44,6 +40,14 @@ app.get("/api/protected", authMiddleware, (req, res) => {
         user: req.user
     });
 });
+
+const mongoURI = "mongodb://192.168.10.30:27017/testdb";
+
+mongoose.connect(mongoURI)
+    .then(() => console.log("Conected to MongoDB"))
+    .catch(err => console.log("MongoDB Connection error:", err));
+
+const port = 3000;
 
 app.listen(port, '0.0.0.0', () => {
     console.log(`Server running on port ${port}`);
