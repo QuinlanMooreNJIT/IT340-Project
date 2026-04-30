@@ -9,3 +9,25 @@
   <p>You are NOT Logged in.</p>
   <a routerLink="/login">Go to Login</a>
 </ng-template>
+
+<h2>Listings</h2>
+
+<div *ngIf="listings.length == 0">
+  <p>No listings available yet.</p>
+</div>
+
+<div *ngFor="let listing of listings" class="listing-card">
+  <h3>{{ listing.title }}</h3>
+  
+  <p>{{ listing.description }}</p>
+  
+  <p>
+    <strong>Category:</strong>
+    {{ listing.category }}
+  </p>
+  
+  <small>
+    Posted by : {{ listing.user?.username || 'Unknown user' }}
+  </small>
+
+</div>
