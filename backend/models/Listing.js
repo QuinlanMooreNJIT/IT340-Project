@@ -34,7 +34,7 @@ const ListingSchema = new mongoose.Schema({
         default: []
     },
     
-    user: {
+    postedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true

@@ -6,7 +6,7 @@ const auth = require('../middleware/authMiddleware');
 router.get('/', async (req, res) => {
     try {
         const listings = await Listing.find()
-            .populate('user', 'username')
+            .populate('postedBy', 'username')
             .sort({ createdAt: -1 });
             
         res.json(listings);
