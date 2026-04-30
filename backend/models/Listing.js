@@ -24,6 +24,16 @@ const ListingSchema = new mongoose.Schema({
         enum: ['instrument', 'service', 'equipment', 'other']
     },
     
+    images: {
+        type: [String],
+        default: []
+    },
+    
+    keywords: {
+        type: [String],
+        default: []
+    },
+    
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
