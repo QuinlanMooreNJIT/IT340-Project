@@ -3,7 +3,7 @@ const router = express.Router();
 const Listing = require('../models/Listing');
 const auth = require('../middleware/authMiddleware');
 
-router.get('/', async (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
         const listings = await Listing.find()
             .populate('postedBy', 'username')
@@ -22,7 +22,9 @@ router.post('/', auth, async (req, res) => {
             description: req.body.description,
             price: req.body.price,
             category: req.body.category,
-            user: req.user.id
+            images: req.body.images || [],
+            keywords: req.body.keywords || [],
+            postedBy: req.postedBy.id
         });
         
         const saved = await newListing.save();
