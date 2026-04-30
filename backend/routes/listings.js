@@ -5,11 +5,13 @@ const auth = require('../middleware/authMiddleware');
 
 router.get('/:id', async (req, res) => {
     try {
-        const listings = await Listing.find()
+        const listing = await Listing.findById(req.params.id)
             .populate('postedBy', 'username')
-            .sort({ createdAt: -1 });
             
-        res.json(listings);
+        if (!listing) {
+            return res.status(404).json({ message: 'Listing not found' });
+        }
+        res.json(listing);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
