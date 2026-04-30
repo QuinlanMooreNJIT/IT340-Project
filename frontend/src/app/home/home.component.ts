@@ -29,9 +29,9 @@ export class HomeComponent implements OnInit {
   loadListings() {
     this.listingService.getListings().subscribe({
       next: (data) => {
-        this.listings = date;
+        this.listings = data;
       },
-      error (err) => {
+      error: (err) => {
         console.error('Error loading listings', err);
       }
     });
