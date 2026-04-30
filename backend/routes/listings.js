@@ -38,7 +38,11 @@ router.get('/:id', async (req, res) => {
 router.post('/', auth, async (req, res) => {
     try {
     
-        if (!req.body.title || !req.body.description || !req.body.price || !req.body.category) {
+        if (!req.body.title ||,
+            !req.body.description ||,
+            req.body.price === undefined||,
+            !req.body.category
+            ) {
             return res.status(400).json({ message: 'Missing required fields' });
         }
         
