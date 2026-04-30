@@ -50,8 +50,15 @@ export class HomeComponent implements OnInit {
   
   createListing() {
     console.log("Submitting listing:", this.newListing);
+    
     const formattedListing = {
+      title: this.newListing.title,
+      description: this.newListing.description,
+      price: this.newListing.price,
+      category: this.newListing.category,
+      
       images: this.newListing.images.filter(img => img.trim() !== ''),
+      
       keywords: typeof this.newListing.keywords === 'string'
         ? this.newListing.keywords.split(',').map(k => k.trim())
         : []
@@ -59,7 +66,6 @@ export class HomeComponent implements OnInit {
     
     this.listingService.createListing(formattedListing).subscribe({
       next: (res) => {
-      
         console.log("Created:", res);
         
         this.newListing = {

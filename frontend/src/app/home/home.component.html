@@ -90,6 +90,7 @@
   
   <p *ngIf="listing.keywords?.length > 0">
     <strong>Keywords:</strong>
+    {{ listing.keywords.join(', ') }}
   </p>
   
   <small>
