@@ -11,14 +11,14 @@ export class ListingService {
   
   constructor(private http: HttpClient) {}
   
-  getListings() Observable<any> {
+  getListings(): Observable<any> {
     return this.http.get(this.apiUrl);
   }
   
   createListing(listing: any): Observable<any> {
     const token = localStorage.getItem('token');
     
-    constheaders = new HttpHeaders({
+    const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
     
