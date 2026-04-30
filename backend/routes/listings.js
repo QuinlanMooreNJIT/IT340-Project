@@ -3,6 +3,20 @@ const router = express.Router();
 const Listing = require('../models/Listing');
 const auth = require('../middleware/authMiddleware');
 
+router.get('/', async (req, res) => {
+    try {
+        const listings = await Listing.find()
+            .populate('postedBy', 'username')
+            .sort({ createdAt: -1 });
+            
+        res.json(listings);
+        
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error fetching listing' });
+    }
+});
+
 router.get('/:id', async (req, res) => {
     try {
         const listing = await Listing.findById(req.params.id)
