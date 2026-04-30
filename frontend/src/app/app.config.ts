@@ -11,16 +11,21 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(
     withInterceptors([
       (req, next) => {
-        const token = localStorage.getItem('token');
+        let token = null;
         
-        if(token) {
-          const cloned = req.clone({
-          setHeaders: {
-            Authorization: `Bearer ${token}`
-          }
+        if (typeof window !== 'undefined') {
+          token = localStorage.getItem('token');
+        }
+        
+        if (token) {
+          const cloned = req.clone ({
+            setHeaders: {
+              Authorization: `Bearer ${token}`
+            }
           });
           return next(cloned);
         }
+        
         return next(req);
       }
     ])

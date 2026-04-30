@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class ListingService {
   
-  private apiUrl = 'http://localhost:3000/api/listings';
+  private apiUrl = 'http://192.168.10.20:3000/api/listings';
   
   constructor(private http: HttpClient) {}
   
