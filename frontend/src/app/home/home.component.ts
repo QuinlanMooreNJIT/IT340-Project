@@ -74,7 +74,7 @@ export class HomeComponent implements OnInit {
         description: '',
         price: 0,
         category: 'instrument',
-        images: [],
+        images: [''],
         keywords: ''
         };
         

@@ -44,7 +44,7 @@
   <input
     type="text"
     placeholder="Image URL"
-    (input)="newListing.images[0] = ($event.target as HTMLInputElement).value"
+    (input)="newListing.images[0] = $any($event.target).value"
   />
   
   <input
