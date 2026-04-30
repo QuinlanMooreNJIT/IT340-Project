@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-Const ListingSchema = new mongoose.Schema({
+const ListingSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
@@ -25,7 +25,7 @@ Const ListingSchema = new mongoose.Schema({
     },
     
     user: {
-        type: mongoose.Schema.Types.ObjectID,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
@@ -34,6 +34,6 @@ Const ListingSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
-}),
+});
 
 module.exports = mongoose.model('Listing', ListingSchema)
