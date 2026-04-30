@@ -31,6 +31,7 @@
     type="number"
     placeholder="Price"
     [(ngModel)]="newListing.price"
+    (ngModelChange)="newListing.price = +$event"
   />
   
   <select [(ngModel)]="newListing.category">
@@ -56,6 +57,8 @@
   <h3>{{ listing.title }}</h3>
   
   <p>{{ listing.description }}</p>
+  
+  <p>{{ listing.price }}</p>
   
   <p>
     <strong>Category:</strong>

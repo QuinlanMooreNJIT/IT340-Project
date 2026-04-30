@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   newListing = {
     title: '',
     description: '',
-    price: null,
+    price: 0,
     category: 'instrument'
   };
 
@@ -46,16 +46,23 @@ export class HomeComponent implements OnInit {
   }
   
   createListing() {
+    console.log("Submitting listing:", this.newListing);
+    
     this.listingService.createListing(this.newListing).subscribe({
-      next: () => {
+      next: (res) => {
+      
+        console.log("Created:", res);
+        
         this.newListing = {
         title: '',
         description: '',
-        price: null,
+        price: 0,
         category: 'instrument'
         };
         
-        this.loadListings();
+        setTimeout(() => {
+          this.loadListings();
+        }, 50);
       },
       error: (err) => {
         console.error('Error creating listing', err);
