@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
   
   newListing = {
     title: '',
-    descrption: '',
+    description: '',
     price: null,
     category: 'instrument'
   };

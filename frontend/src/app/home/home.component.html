@@ -12,7 +12,7 @@
 
 <hr>
 
-<div *ngIf="aith.isLoggedIn()">
+<div *ngIf="auth.isLoggedIn()">
 
   <h2>Create Listing</h2>
   
@@ -37,7 +37,7 @@
     <option value="instrument">Instrument</option>
     <option value="service">Service</option>
     <option value="equipment">Equipment</option>
-    <option value="Other">Other</option>
+    <option value="other">Other</option>
   </select>
   
   <button (click)="createListing()">Post Listing</button>
