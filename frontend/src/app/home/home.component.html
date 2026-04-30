@@ -10,6 +10,42 @@
   <a routerLink="/login">Go to Login</a>
 </ng-template>
 
+<hr>
+
+<div *ngIf="aith.isLoggedIn()">
+
+  <h2>Create Listing</h2>
+  
+  <input
+    type="text"
+    placeholder="Title"
+    [(ngModel)]="newListing.title"
+  />
+  
+  <textarea
+    placeholder="Description"
+    [(ngModel)]="newListing.description"
+  ></textarea>
+  
+  <input
+    type="number"
+    placeholder="Price"
+    [(ngModel)]="newListing.price"
+  />
+  
+  <select [(ngModel)]="newListing.category">
+    <option value="instrument">Instrument</option>
+    <option value="service">Service</option>
+    <option value="equipment">Equipment</option>
+    <option value="Other">Other</option>
+  </select>
+  
+  <button (click)="createListing()">Post Listing</button>
+
+</div>
+
+<hr>
+
 <h2>Listings</h2>
 
 <div *ngIf="listings.length === 0">
