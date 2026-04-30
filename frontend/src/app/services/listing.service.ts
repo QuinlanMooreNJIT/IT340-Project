@@ -15,6 +15,10 @@ export class ListingService {
     return this.http.get(this.apiUrl);
   }
   
+  getListingById(id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
+  
   createListing(listing: any): Observable<any> {
     const token = localStorage.getItem('token');
     
