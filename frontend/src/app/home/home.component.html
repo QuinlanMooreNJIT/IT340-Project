@@ -41,6 +41,18 @@
     <option value="other">Other</option>
   </select>
   
+  <input
+    type="text"
+    placeholder="Image URL"
+    [(ngModel)]="newListing.images[0]"
+  />
+  
+  <input
+    type="text"
+    placeholder="Keywords (comma seperated)"
+    [(ngModel)]="newListing.keywords"
+  />
+  
   <button (click)="createListing()">Post Listing</button>
 
 </div>
@@ -53,16 +65,31 @@
   <p>No listings available yet.</p>
 </div>
 
-<div *ngFor="let listing of listings" class="listing-card">
+<div
+  *ngFor="let listing of listings" 
+  class="listing-card"
+  [routerLink]="['/listing', listing._id]"
+  style="cursor: pointer;"
+>
   <h3>{{ listing.title }}</h3>
+  
+  <img
+    *ngIf="listing.images?.length > 0"
+    [src]="listing.images[0]"
+    width="150"
+  />
   
   <p>{{ listing.description }}</p>
   
-  <p>{{ listing.price }}</p>
+  <p><strong>Price:</strong> ${{ listing.price }}</p>
   
   <p>
     <strong>Category:</strong>
     {{ listing.category }}
+  </p>
+  
+  <p *ngIf="listing.keywords?.length > 0">
+    <strong>Keywords:</strong>
   </p>
   
   <small>

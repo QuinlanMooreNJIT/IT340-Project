@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ListingService } from '../services/listing.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   styleUrls: ['./home.component.css'],
   templateUrl: './home.component.html'
 })
@@ -21,7 +22,9 @@ export class HomeComponent implements OnInit {
     title: '',
     description: '',
     price: 0,
-    category: 'instrument'
+    category: 'instrument',
+    images: [''],
+    keywords: ''
   };
 
   constructor(
@@ -47,8 +50,14 @@ export class HomeComponent implements OnInit {
   
   createListing() {
     console.log("Submitting listing:", this.newListing);
+    const formattedListing = {
+      images: this.newListing.images.filter(img => img.trim() !== ''),
+      keywords: typeof this.newListing.keywords === 'string'
+        ? this.newListing.keywords.split(',').map(k => k.trim())
+        : []
+    };
     
-    this.listingService.createListing(this.newListing).subscribe({
+    this.listingService.createListing(formattedListing).subscribe({
       next: (res) => {
       
         console.log("Created:", res);
@@ -57,7 +66,9 @@ export class HomeComponent implements OnInit {
         title: '',
         description: '',
         price: 0,
-        category: 'instrument'
+        category: 'instrument',
+        images: [''],
+        keywords: ''
         };
         
         setTimeout(() => {
