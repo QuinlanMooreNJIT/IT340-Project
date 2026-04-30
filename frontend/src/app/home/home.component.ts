@@ -57,7 +57,9 @@ export class HomeComponent implements OnInit {
       price: this.newListing.price,
       category: this.newListing.category,
       
-      images: this.newListing.images.filter(img => img.trim() !== ''),
+      images: Array.isArray(this.newListing.images)
+        ? this.newListing.images.filer(img => img.trim() !== '')
+        : [],
       
       keywords: typeof this.newListing.keywords === 'string'
         ? this.newListing.keywords.split(',').map(k => k.trim())
@@ -77,9 +79,8 @@ export class HomeComponent implements OnInit {
         keywords: ''
         };
         
-        setTimeout(() => {
-          this.loadListings();
-        }, 50);
+
+        this.loadListings();
       },
       error: (err) => {
         console.error('Error creating listing', err);
