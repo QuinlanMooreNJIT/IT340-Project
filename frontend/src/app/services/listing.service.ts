@@ -11,14 +11,17 @@ export class ListingService {
   
   constructor(private http: HttpClient) {}
   
+  //GET all listings
   getListings(): Observable<any> {
-    return this.http.get(this.apiUrl);
+    return this.http.get<any>(this.apiUrl);
   }
   
+  //GET single listing by ID
   getListingById(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`);
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
   
+  //CREATE new listing
   createListing(listing: any): Observable<any> {
     const token = localStorage.getItem('token');
     
@@ -26,6 +29,6 @@ export class ListingService {
       Authorization: `Bearer ${token}`
     });
     
-    return this.http.post(this.apiUrl, listing, { headers });
+    return this.http.post<any>(this.apiUrl, listing, { headers });
   }
 }
