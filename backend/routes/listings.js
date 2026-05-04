@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const Listing = require('../models/Listing');
 const auth = require('../middleware/authMiddleware');
 
+// GET all listings
 router.get('/', async (req, res) => {
     try {
         const listings = await Listing.find()
@@ -17,12 +19,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+
+// GET single listing by ID
 router.get('/:id', async (req, res) => {
     try {
-        const listing = await Listing.findById(req.params.id)
+        const { id } = req.params;
+            
+        // Prevent invalid MongoDB ObjectID crash
+        if (!mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({ message: 'Invalid listing ID' });
+        }
+        
+        const listing = await Listing.findById(id)
             .populate('postedBy', 'username')
             .exec();
-            
+        
         if (!listing) {
             return res.status(404).json({ message: 'Listing not found' });
         }
@@ -35,6 +46,8 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+
+// CREATE new listing
 router.post('/', auth, async (req, res) => {
     try {
     
@@ -57,6 +70,9 @@ router.post('/', auth, async (req, res) => {
         });
         
         const saved = await newListing.save();
+        
+        const populatedListing = await saved.populate('postedBy', 'username');
+        
         res.status(201).json(saved);
         
     } catch (err) {
