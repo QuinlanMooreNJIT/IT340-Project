@@ -65,12 +65,12 @@
   <p>No listings available yet.</p>
 </div>
 
-<div
-  *ngFor="let listing of listings" 
-  class="listing-card"
-  [routerLink]="['/listing', listing._id]"
-  style="cursor: pointer;"
->
+<div *ngFor="let listing of listings" class="listing-card">
+
+  <a 
+    [routerLink]="['/listing', listing._id]"
+    style="text-decoration: none; color: inherit; display: block; cursor: pointer;"
+  >
   <h3>{{ listing.title }}</h3>
   
   <img
@@ -96,5 +96,7 @@
   <small>
     Posted by : {{ listing.postedBy?.username || 'Unknown user' }}
   </small>
+  
+  </a>
 
 </div>
