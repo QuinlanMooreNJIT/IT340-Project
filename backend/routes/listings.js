@@ -73,7 +73,7 @@ router.post('/', auth, async (req, res) => {
         
         const populatedListing = await saved.populate('postedBy', 'username');
         
-        res.status(201).json(saved);
+        res.status(201).json(populatedListing);
         
     } catch (err) {
         console.error(err);
