@@ -1,4 +1,4 @@
-<div *ngIf="listing; else loading" class="listing-container">
+<div *ngIf="listing && listing._id; else loading" class="listing-container">
   
   <h1>{{ listing.title }}</h1>
   
@@ -13,7 +13,7 @@
     <p><strong>Description:</strong></p>
     <p>{{ listing.description }}</p>
     
-    <p><strong>Price:</strong>${{ listing.price }}</p>
+    <p><strong>Price:</strong> ${{ listing.price }}</p>
     
     <p><strong>Category:</strong>{{ listing.category }}</p>
     
