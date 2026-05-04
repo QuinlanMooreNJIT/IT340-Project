@@ -1,0 +1,16 @@
+.listing-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.listing-image {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+}
+
+.listing-info p {
+  margin: 8px 0;
+}

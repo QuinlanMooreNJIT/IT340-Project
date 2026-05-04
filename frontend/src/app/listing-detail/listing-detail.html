@@ -1,1 +1,42 @@
-<p>listing-detail works!</p>
+<div *ngIf="listing; else loading" class="listing-container">
+  
+  <h1>{{ listing.title }}</h1>
+  
+  <img
+    *ngIf="listing.images?.length > 0"
+    [src]="listing.images[0]"
+    class="listing-image"
+  />
+  
+  <div class="listing-info">
+    
+    <p><strong>Description:</strong></p>
+    <p>{{ listing.description }}</p>
+    
+    <p><strong>Price:</strong>${{ listing.price }}</p>
+    
+    <p><strong>Category:</strong>{{ listing.category }}</p>
+    
+    <p *ngIf="listing.keywords?.length > 0">
+      <strong>Keywords:</strong>
+      {{ listing.keywords.join(', ') }}
+    </p>
+    
+    <p>
+      <strong>Posted by:</strong>
+      {{ listing.postedBy?.username || 'Unknown user' }}
+    </p>
+    
+    <p>
+      <small>
+        Posted on: {{ listing.createdAt | date:'medium' }}
+      </small>
+    </p>
+    
+  </div>
+  
+</div>
+
+<ng-template #loading>
+  <p>Loading listing...</p>
+</ng-template>
