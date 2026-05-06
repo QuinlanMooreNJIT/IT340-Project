@@ -32,13 +32,13 @@ export class AuthService {
     { username, password }
     ).pipe(
       tap((res) => {
-      if (res.mfaRequired && this.isBrowser()) {
-        localStorage.setItem('mfa_userId', res.userId);
+      if (res.mfaRequired) {
+        this.setMfaUser(res.userId);
         }
       })
     );
   }
-  setMfaUser(uerId: string) {
+  setMfaUser(userId: string) {
     if (this.isBrowser()) {
       localStorage.setItem('mfa_userId',userId);
     }
