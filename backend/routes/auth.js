@@ -41,6 +41,7 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res) => { 
     try {
+        console.log("LOGIN ROUTE HIT")
         const { username, password } = req.body;
         
         logger.info(`LOGIN attempt: ${username} from ${req.ip}`);
@@ -72,6 +73,7 @@ router.post("/login", async (req, res) => {
         });
         
     } catch (error) {
+        console.error("LOGIN CRASH:", error);
         logger.error(`LOGIN ERROR: ${error.message}`);
         res.status(500).json({ error: error.message });
     }

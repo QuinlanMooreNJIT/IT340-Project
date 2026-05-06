@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
@@ -12,6 +14,10 @@ app.use(cors());
 app.use(express.json());
 
 const logDirectory = path.join(__dirname, 'logs');
+
+console.log("EMAIL_USER:", process.env.EMAIL_USER);
+console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "SET" : "MISSING");
+
 
 if (!fs.existsSync(logDirectory)) {
     fs.mkdirSync(logDirectory);
