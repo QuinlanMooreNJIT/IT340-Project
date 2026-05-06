@@ -97,6 +97,24 @@
     Posted by : {{ listing.postedBy?.username || 'Unknown user' }}
   </small>
   
+    <div *ngIf="listing.comments?.length" class="comments-preview">
+      <hr>
+      
+      <strong>Latest Comments</strong>
+      
+      <div *ngFor="let comment of listing.comments">
+        
+        <p style="margin: 5px 0;">
+          <small>
+            <strong>{{ comment.userId?.username }}:</strong>
+            {{ comment.content }}
+          </small>
+        </p>
+        
+      </div>
+      
+    </div>
+  
   </a>
 
 </div>

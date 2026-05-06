@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit {
     public auth: AuthService, 
     private router: Router,
     private listingService: ListingService,
-    private commonService: CommentService
+    private commentService: CommentService
   ) {}
   
   ngOnInit(): void {
@@ -47,8 +47,10 @@ export class HomeComponent implements OnInit {
         
         this.listings.forEach(listing => {
         
+          if(!listing?._id) return;
+        
           this.commentService.getComments(listing._id)
-            .subsrcibe({
+            .subscribe({
               next: (comments) => {
                 listing.comments = comments.slice(0, 3);
               },
