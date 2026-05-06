@@ -6,25 +6,25 @@ const Comment = require('../models/comment');
 
 const authMiddleware = require('../middleware/authMiddleware');
 
-router.post('/', authMiddleware, async (req, res) = {
+router.post('/', authMiddleware, async (req, res) => {
     try {
-        const { listingId, conetent } = req.body;
+        const { listingId, content } = req.body;
         
         if (!listingId || !mongoose.Types.ObjectId.isValid(listingId)) {
             return res.status(400).json({ message: 'Invalid listing ID' });
         }
         
-        if (!content || content.trim() == '') {
+        if (!content || content.trim() === '') {
             return res.status(400).json({ message: 'Comment cannot be empty' });
         }
         
         const newComment = new Comment ({
             listingId,
-            userId: res.user.id,
+            userId: req.user.id,
             content: content.trim()
         });
         
-        const savedComment = await newComment.save()
+        const savedComment = await newComment.save();
         
         res.status(201).json(savedComment);
     } catch (err) {
