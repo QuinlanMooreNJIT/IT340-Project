@@ -4,7 +4,7 @@ const MfaTokenSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: 'user'
+        ref: 'User'
     },
     
     otp: {
@@ -18,5 +18,7 @@ const MfaTokenSchema = new mongoose.Schema({
         expires: 300
     }
 });
+
+MfaTokenSchema.index({ createdAt: 1 }, { expireAfterSeconds: 300 });
 
 module.exports = mongoose.model('MfaToken', MfaTokenSchema);
