@@ -30,6 +30,9 @@ app.use("/api/auth", authRoutes)
 const listingsRoutes = require("./routes/listings");
 app.use("/api/listings", listingsRoutes);
 
+const mfaRoutes = require("./routes/mfaRoutes");
+app.use("/api/mfa", mfaRoutes);
+
 const authMiddleware = require("./middleware/authMiddleware");
 
 app.get('/', (req, res) => res.send('Backend is running!'));

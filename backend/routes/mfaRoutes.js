@@ -17,24 +17,24 @@ router.post('/verify', async (req, res) => {
             });
         }
         
-        const user = await User.findBy(userId);
+        const user = await User.findById(userId);
         
         if (!user) {
-            return res.status(400).json({
+            return res.status(404).json({
                 message: 'User not found'
             });
         }
         
         await MfaToken.deleteMany({ userId });
         
-        const token = jwt.sing(
+        const token = jwt.sign(
             { id: user._id, username: user.username },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
         
         return res.status(200).json({
-            message: 'MFA verified sucessfully',
+            message: 'MFA verified successfully',
             token,
             user
         });
