@@ -19,6 +19,4 @@ const MfaTokenSchema = new mongoose.Schema({
     }
 });
 
-MfaTokenSchema.index({ createdAt: 1 }, { expireAfterSeconds: 300 });
-
 module.exports = mongoose.model('MfaToken', MfaTokenSchema);
