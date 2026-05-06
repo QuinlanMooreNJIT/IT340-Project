@@ -11,7 +11,22 @@ router.get('/', async (req, res) => {
             .populate('postedBy', 'username')
             .sort({ createdAt: -1 });
             
-        res.json(listings);
+        const listingsWithComments = await Promise.all(
+            listings.map(async (listing) => {
+            
+                const comments = await Comment.find({ listingId: listing._id })
+                    .populate('userId', 'username')
+                    .sort({ createdAt: -1 })
+                    .limit(3);
+                    
+                return {
+                    ...listing.toObject(),
+                    comments
+                };
+            })
+        );
+            
+        res.json(listingsWithComments);
         
     } catch (err) {
         console.error(err);
