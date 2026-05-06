@@ -46,7 +46,7 @@ export class ListingDetail implements OnInit {
     });    
   }
   
-  loadComments(): coid {
+  loadComments(): void {
     if(!this.listing?._id) return;
     
     this.commentService.getComments(this.listing._id).subscribe({
