@@ -39,7 +39,6 @@ export class LoginComponent {
           return;
         }
         
-        this.router.navigate(['/home']);
         },
         
       error: (err) => {

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-mfa-verify',
@@ -19,7 +19,7 @@ export class MfaVerify {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private auth: Authservice
+    private auth: AuthService
   ) {}
   
   verifyOtp() {
@@ -31,7 +31,7 @@ export class MfaVerify {
       return;
     }
     
-    this.http.post<any>('http://192.168.10.10/3000/api/mfa/verify', {
+    this.http.post<any>('http://192.168.10.20/3000/api/mfa/verify', {
       userId,
       otp: this.otp
     }).subscribe({
@@ -43,7 +43,7 @@ export class MfaVerify {
         
         localStorage.removeItem('mfa_userId');
         
-        this.route.navigate(['/home']);
+        this.router.navigate(['/home']);
       },
       
       error: (err) => {
