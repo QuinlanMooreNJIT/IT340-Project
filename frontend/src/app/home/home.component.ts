@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ListingService } from '../services/listing.service';
-import { CommentService } from '../services/comment.service';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -32,7 +31,6 @@ export class HomeComponent implements OnInit {
     public auth: AuthService, 
     private router: Router,
     private listingService: ListingService,
-    private commentService: CommentService
   ) {}
   
   ngOnInit(): void {
@@ -42,26 +40,7 @@ export class HomeComponent implements OnInit {
   loadListings() {
     this.listingService.getListings().subscribe({
       next: (data) => {
-      
         this.listings = data;
-        
-        this.listings.forEach(listing => {
-        
-          if(!listing?._id) return;
-        
-          this.commentService.getComments(listing._id)
-            .subscribe({
-              next: (comments) => {
-                listing.comments = comments.slice(0, 3);
-              },
-              error: (err) => {
-                console.error('Error loading comments', err);
-                listing.comments = [];
-              }
-            });
-            
-        });
-        
       },
       error: (err) => {
         console.error('Error loading listings', err);
