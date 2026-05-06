@@ -11,7 +11,7 @@ const { sendOtpEmail } = require("../services/emailService")
 
 router.post("/register", async (req, res) => {
     try {
-        const {username, password} = req.body;
+        const {username, email, password} = req.body;
         
         logger.info(`REGISTER attempt: ${username} from ${req.ip}`);
         
@@ -23,6 +23,7 @@ router.post("/register", async (req, res) => {
                 
         const newUser = new User({
             username,
+            email,
             password
         });
         
@@ -60,9 +61,9 @@ router.post("/login", async (req, res) => {
         
         const otp = await createMfaToken(user._id);
         
-        await sendOtpEmail(user.username, otp);
+        await sendOtpEmail(user.email, otp);
         
-        logger.info(`MFA OTP send to ${username}`);
+        logger.info(`MFA OTP sent to ${username}`);
         
         return res.json({
             message: "MFA required - OTP sent to email",
