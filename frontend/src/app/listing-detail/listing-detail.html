@@ -35,6 +35,48 @@
     
   </div>
   
+  <hr>
+  
+  <h2>Comments</h2>
+  
+  <div *ngIf="auth?.isLoggedIn?.()">
+    
+    <textarea
+      [(ngModel)]="newComment"
+      placeholder="Write a comment..."
+      rows="3"
+      class="comment-box"
+    ></textarea>
+    
+    <br>
+    
+    <button (click)="submitComment">
+      Post Comment
+    </button>
+  </div>
+  <div *ngIf="comments?.length > 0; else noComments">
+    <div *ngFor="let comment of comments" class="comment">
+      
+      <p>
+        <strong>{{ comment.userId?.username }}</strong>
+      </p>
+      
+      <p>{{ comment.content }}</p>
+      
+      <small>
+        {{ comment.createdAt | date:'short' }}
+      </small>
+      
+      <hr>
+      
+    </div>
+    
+  </div>
+  
+  <ng-template #noComments>
+    <p>No comments yet.</p>
+  </ng-template>
+  
 </div>
 
 <ng-template #loading>
