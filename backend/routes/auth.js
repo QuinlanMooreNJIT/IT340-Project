@@ -6,6 +6,9 @@ const User = require("../models/User");
 
 const logger = require("../logger");
 
+const { createMfaToken } = require("../services/mfaService");
+const { sendOtpEmail } = require("../services/emailService")
+
 router.post("/register", async (req, res) => {
     try {
         const {username, password} = req.body;
@@ -42,28 +45,29 @@ router.post("/login", async (req, res) => {
         logger.info(`LOGIN attempt: ${username} from ${req.ip}`);
         
         const user = await User.findOne({ username });
+        
         if (!user) {
             logger.warn(`LOGIN FAILED (no user): ${username} from ${req.ip}`);
             return res.status(400).json({ message: "Invalid credentials"});
         }
         
         const isMatch = await bcrypt.compare(password, user.password);
+        
         if (!isMatch) {
             logger.warn(`LOGIN FAILED (bad password): ${username} from ${req.ip}`);
             return res.status(400).json({ message: "Invalid credentials"});
         }
         
-        const token = jwt.sign(
-        { id: user._id },
-        "SECRET_KEY",
-        { expiresIn: "1h"}
-        );
+        const otp = await createMfaToken(user._id);
         
-        logger.info(`LOGIN SUCCESS: ${username} from ${req.ip}`);
+        await sendOtpEmail(user.username, otp);
         
-        res.json({
-            message: "Login successful",
-            token: token
+        logger.info(`MFA OTP send to ${username}`);
+        
+        return res.json({
+            message: "MFA required - OTP sent to email",
+            mfaRequired: true,
+            userId: user._id
         });
         
     } catch (error) {
