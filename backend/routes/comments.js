@@ -36,6 +36,7 @@ router.post('/', authMiddleware, async (req, res) => {
 router.get('/:listingId', async (req, res) => {
     try {
         const { listingId } = req.params;
+        const limit = parseInt(req.query.limit) || 20;
         
         if(!mongoose.Types.ObjectId.isValid(listingId)) {
             return res.status(400).json({ message: 'Invalid listing ID' });
@@ -44,7 +45,7 @@ router.get('/:listingId', async (req, res) => {
         const comments = await Comment.find({ listingId })
             .populate('userId', 'username')
             .sort({ createdAt: -1 })
-            .limit(20);
+            .limit(limit);
             
         res.json(comments);
         
