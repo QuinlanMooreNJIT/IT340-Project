@@ -38,8 +38,13 @@ export class AuthService {
       })
     );
   }
+  setMfaUser(uerId: string) {
+    if (this.isBrowser()) {
+      localStorage.setItem('mfa_userId',userId);
+    }
+  }
   
-  setMfaUser(): string | null {
+  getMfaUser(): string | null {
     if (this.isBrowser()) {
       return localStorage.getItem('mfa_userId');
     }
@@ -54,12 +59,14 @@ export class AuthService {
   
   setToken(token: string) {
     if (this.isBrowser()) {
+      localStorage.setItem('token', token);
       localStorage.removeItem('mfa_userId');
     }
   }
   
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('mfa_userId');
   }
   
   getToken(): string | null {
