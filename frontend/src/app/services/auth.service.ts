@@ -19,9 +19,10 @@ export class AuthService {
     return isPlatformBrowser(this.platformId)
   }
   
-  register(username: string, password: string) {
+  register(username: string, email: string, password: string) {
     return this.http.post(`${this.baseUrl}/register`, {
       username,
+      email,
       password
     });
   }
@@ -32,7 +33,7 @@ export class AuthService {
     { username, password }
     ).pipe(
       tap((res) => {
-      if (res.mfaRequired) {
+      if (res.mfaRequired && this.isBrowser()) {
         this.setMfaUser(res.userId);
         }
       })
@@ -65,7 +66,7 @@ export class AuthService {
   }
   
   logout() {
-  if (this.isBrowser){
+  if (this.isBrowser()){
       localStorage.removeItem('token');
       localStorage.removeItem('mfa_userId');
     }

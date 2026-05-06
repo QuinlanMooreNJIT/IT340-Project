@@ -13,17 +13,23 @@ import { FormsModule } from '@angular/forms';
 
 export class RegisterComponent { 
   username = '';
+  email = '';
   password = '';
+  
   message = '';
   
   constructor(private auth: AuthService, private router: Router) {} 
   register() {
   console.log("REGISTER CLICKED");
   console.log("USERNAME:", this.username);
+  console.log("EMAIL:", this.email);
   console.log("PASSWORD:", this.password);
-    this.auth.register(this.username, this.password).subscribe ({
+  
+    this.auth.register(this.username, this.email, this.password).subscribe ({
       next: (res) => {
       console.log("REGISTER SUCCESS: ", res);
+      
+        this.message = "Account created successfully";
         this.router.navigate(['/login']);
       },
       error: (err) => {
