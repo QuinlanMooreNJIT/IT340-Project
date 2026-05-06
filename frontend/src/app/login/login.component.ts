@@ -38,7 +38,8 @@ export class LoginComponent {
           
           return;
         }
-        
+        this.message = "Unexpected login response (no MFA flag)";
+        console.log("WARNING: No MFA flag returned", res);
         },
         
       error: (err) => {

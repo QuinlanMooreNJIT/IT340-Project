@@ -31,7 +31,7 @@ export class MfaVerify {
       return;
     }
     
-    this.http.post<any>('http://192.168.10.20/3000/api/mfa/verify', {
+    this.http.post<any>('http://192.168.10.20:3000/api/mfa/verify', {
       userId,
       otp: this.otp
     }).subscribe({
