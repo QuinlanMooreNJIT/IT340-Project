@@ -27,17 +27,37 @@ export class AuthService {
   }
   
   login(username: string, password: string) {
-    return this.http.post<{ token: string }> (
+    return this.http.post<any>(
     `${this.baseUrl}/login`,
     { username, password }
     ).pipe(
       tap((res) => {
-      if (this.isBrowser()) {
-        localStorage.setItem('token', res.token);
+      if (res.mfaRequired && this.isBrowser()) {
+        localStorage.setItem('mfa_userId', res.userId);
         }
       })
     );
   }
+  
+  setMfaUser(): string | null {
+    if (this.isBrowser()) {
+      return localStorage.getItem('mfa_userId');
+    }
+    return null
+  }
+  
+  clearMfaUser() {
+    if (this.isBrowser()) {
+      localStorage.removeItem('mfa_userId');
+    }
+  }
+  
+  setToken(token: string) {
+    if (this.isBrowser()) {
+      localStorage.removeItem('mfa_userId');
+    }
+  }
+  
   logout() {
     localStorage.removeItem('token');
   }
