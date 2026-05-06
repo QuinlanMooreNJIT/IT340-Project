@@ -12,17 +12,17 @@ async function sendOtpEmail(email, otp) {
     const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: 'Musicians Marketplace = Your Login Verification Code',
+    subject: 'Musicians Marketplace - Your Login Verification Code',
     text: `
 Your verification code is: ${otp}
 
-This coe will expire in 5 minutes.
+This code will expire in 5 minutes.
 
 If you did not request this login, please ignore this email.
     `
     };
     
-    await traonsporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions);
 }
 
 module.exports = { sendOtpEmail };
