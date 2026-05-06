@@ -65,8 +65,10 @@ export class AuthService {
   }
   
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('mfa_userId');
+  if (this.isBrowser){
+      localStorage.removeItem('token');
+      localStorage.removeItem('mfa_userId');
+    }
   }
   
   getToken(): string | null {
