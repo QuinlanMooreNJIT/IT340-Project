@@ -1,1 +1,16 @@
-<p>mfa-verify works!</p>
+<h2>Enter Verification Code</h2>
+
+<p>We went a 6-digit code to your email</p>
+
+<input 
+  [(ngModel)]="otp"
+  name="otp"
+  placeholder="Enter OTP"
+  maxlength="6"
+/>
+
+<button (click)="verifyOtp()">
+  Verify
+</button>
+
+<p>{{ message }}</p>
