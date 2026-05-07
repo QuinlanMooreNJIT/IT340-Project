@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Listing = require('../models/Listing');
+const Comment = require('../models/comment');
 const auth = require('../middleware/authMiddleware');
 
 // GET all listings
