@@ -4,6 +4,9 @@ const router = express.Router();
 const Cart = require("../models/Cart");
 const Listing = require("../models/Listing");
 
+const nodemailer = require("nodemailer");
+const User = require("../models/User")
+
 const auth = require("../middleware/authMiddleware")
 
 router.post("/add", auth, async (req, res) => {
@@ -27,7 +30,9 @@ router.post("/add", auth, async (req, res) => {
             });
         }
         
-        const alreadyInCart = cart.listings.includes(listingId);
+        const alreadyInCart = cart.listings.some(
+            (item) => item.toString() === listingId
+        );
         
         if (alreadyInCart) {
             return res.status(400).json({
@@ -80,7 +85,7 @@ router.get("/", auth, async (req, res) => {
 router.delete("/:listingId", auth, async (req, res) => {
     try {
     const cart = await Cart.findOne({
-        user req.user.id,
+        user: req.user.id,
     });
     
     if (!cart) {
@@ -100,6 +105,75 @@ router.delete("/:listingId", auth, async (req, res) => {
         cart,
     });
 
+    } catch (error) {
+        console.error(error);
+        
+        res.status(500).json({
+            message: "Server error",
+        });
+    }
+});
+
+router.post("/checkout", auth, async (req, res) => {
+    try {
+    const cart = await Cart.findOne({
+        user: req.user.id,
+    }).populate("listings");
+    
+    if (!cart || cart.listings.length === 0) {
+        return res.status(400).json({
+            message: "Cart is empty",
+        });
+    }
+    
+    const purchasedListings = cart.listings;
+    
+    const listingIds = purchasedListings.map(
+        (listing) => listin._id
+    );
+    
+    await Listing.deleteMany({
+        _id: { $in: listingIds },
+    });
+    
+    cart.listings = [];
+    
+    await cart.save();
+    
+    const user = await User.findById(req.user.id);
+    
+    const itemList = purchasedListings
+        .map((item) => `- ${item.title}`)
+        .join("\n");
+        
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            user: process.env.EMAIL_USER,
+            post: proccess.env.EMAIL_PASS,
+        },
+    });
+    
+    await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: user.email,
+        subject: "Purchase Confirmation",
+        text:`
+Thank you for your purchase on Musicians Marketplace!
+
+You purchased:
+
+${itemList}
+
+Your purchase has been completed successfully.
+        `,
+        });
+        
+        res.json({
+            message: "Checkout successful",
+            purchasedListings,
+        });
+        
     } catch (error) {
         console.error(error);
         
