@@ -31,4 +31,11 @@ export class ListingService {
     
     return this.http.post<any>(this.apiUrl, listing, { headers });
   }
+  
+  // SEARCH listings
+  searchListings(query: string): Observable<any> {
+    return this.http.get<any>(
+      `${this.apiUrl}/search?q=${query}`
+    );
+  }
 }
