@@ -43,6 +43,9 @@ app.use("/api/mfa", mfaRoutes);
 const commentsRoutes = require('./routes/comments');
 app.use("/comments", commentsRoutes);
 
+const cartRoutes = require("./routes/cart");
+app.use("/cart", cartRoutes);
+
 const authMiddleware = require("./middleware/authMiddleware");
 
 app.get('/', (req, res) => res.send('Backend is running!'));
