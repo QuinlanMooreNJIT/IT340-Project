@@ -1,1 +1,41 @@
-<p>search-results works!</p>
+<div class="search-results-container">
+  <h2>Search Results</h2>
+  <p *ngIf="query">
+    results for: <strong>"{{ query }}"</strong>
+  </p>
+  
+  <hr />
+  <div *ngIf="listings.length === 0">
+    <p>No listings found.</p>
+  </div>
+  
+  <div *ngFor="let listing of listings" class="listing-card" style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc;">
+  
+  <h3>
+    <a [routerLink]="['/listing', listing._id]">
+      {{ listing.title }}
+    </a>
+  </h3>
+  
+  <p>{{ listing.description }}</p>
+  
+  <p>
+    <strong>Price:</strong>{{ listing.price }}
+  </p>
+  
+  <p>
+    <strong>Category:</strong>{{ listing.category }}
+  </p>
+  
+  <div *ngIf="listing.keywords?.length">
+    <small>
+      Tags:
+      <span *ngFor="let tag of listing.keywords">
+        #{{ tag }}
+      </span>
+    </small>
+  </div>
+  
+  </div>
+  
+</div>

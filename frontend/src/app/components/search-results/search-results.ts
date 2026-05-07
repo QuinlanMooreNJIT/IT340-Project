@@ -7,7 +7,7 @@ import { ListingService } from '../../services/listing.service';
   templateUrl: './search-results.html',
   styleUrl: './search-results.css',
 })
-export class SearchResults implements OnInit {
+export class SearchResultsComponent implements OnInit {
   
   listings: any[] = [];
   query: string = '';
