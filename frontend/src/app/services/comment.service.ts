@@ -18,6 +18,7 @@ export class CommentService {
   addComment(listingId: string, content: string): Observable<any> {
     const token = localStorage.getItem('token');
     
+    console.log("TOKEN:", token);
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`
     });

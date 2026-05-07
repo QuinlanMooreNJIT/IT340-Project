@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../services/auth.service';
 
 import { ListingService } from '../services/listing.service';
 import { CommentService } from '../services/comment.service';
@@ -24,7 +25,8 @@ export class ListingDetail implements OnInit {
     private route: ActivatedRoute,
     private listingService: ListingService,
     private commentService: CommentService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public auth: AuthService
   ) {}
   
   ngOnInit(): void {
