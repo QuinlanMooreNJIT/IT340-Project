@@ -6,9 +6,9 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-root',
   standalone: true,
   imports: [
-    Router,
     RouterLink, 
-    RouterOutlet
+    RouterOutlet,
+    FormsModule
     ],
   templateUrl: './app.html',
 })
