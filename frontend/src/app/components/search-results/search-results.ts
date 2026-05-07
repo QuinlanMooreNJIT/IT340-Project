@@ -19,7 +19,7 @@ export class SearchResults implements OnInit {
   
   ngOnInit(): void {
     
-    this.route.query.Params.subscribe(params => {
+    this.route.queryParams.subscribe(params => {
       
       this.query = params['q'] || '';
       
