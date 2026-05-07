@@ -46,4 +46,10 @@ const ListingSchema = new mongoose.Schema({
     }
 });
 
+ListingSchema.index({
+    title: 'text',
+    description: 'text',
+    keywords: 'text'
+});
+
 module.exports = mongoose.model('Listing', ListingSchema)
