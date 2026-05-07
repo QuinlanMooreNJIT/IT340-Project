@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { ListingService } from '../../services/listing.service';
 
 @Component({
   selector: 'app-search-results',
+  standalone: true,
+  imports: [CommonModule, RouterLink],
   templateUrl: './search-results.html',
   styleUrl: './search-results.css',
 })

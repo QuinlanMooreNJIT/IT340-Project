@@ -1,7 +1,7 @@
 <div class="search-results-container">
   <h2>Search Results</h2>
   <p *ngIf="query">
-    results for: <strong>"{{ query }}"</strong>
+    Results for: <strong>"{{ query }}"</strong>
   </p>
   
   <hr />
@@ -20,11 +20,11 @@
   <p>{{ listing.description }}</p>
   
   <p>
-    <strong>Price:</strong>{{ listing.price }}
+    <strong>Price:</strong> ${{ listing.price }}
   </p>
   
   <p>
-    <strong>Category:</strong>{{ listing.category }}
+    <strong>Category:</strong> {{ listing.category }}
   </p>
   
   <div *ngIf="listing.keywords?.length">
