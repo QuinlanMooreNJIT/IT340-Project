@@ -1,7 +1,23 @@
-<nav style="margin-bottom: 20px;">
+<nav style="margin-bottom: 20px; display: flex; gap: 10px; align-items: center;">
+
   <a routerLink="">Home</a> |
   <a routerLink="register">register</a> |
   <a routerLink="login">login</a> 
+  
+  <span style="margin-left: auto;">
+    <input
+      type="text"
+      placeholder="Search listings..."
+      [(ngModel)]="searchQuery"
+      (keyup.enter)="onSearch()"
+      style="padding: 4px;"
+    />
+    
+    <button (click)="onSearch()">
+      Search
+    </button>
+  </span>
+  
 </nav>
 
 <hr>
