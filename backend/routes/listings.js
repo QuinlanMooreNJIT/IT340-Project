@@ -5,9 +5,40 @@ const Listing = require('../models/Listing');
 const Comment = require('../models/comment');
 const auth = require('../middleware/authMiddleware');
 
+//SEARCH listings
+router.get('/search', async (req, res) => {
+    try {
+        
+        const query = req.query.q;
+        
+        if(!query || query.trim() === '') {
+            return res.status(400).json({
+                message: 'Search query is required'
+            });
+        }
+        
+        const listings = await Listing.find({
+            $text: {
+                $search: query
+            }
+        })
+        .populate('postedBy', 'username')
+        .sort({ createdAt: -1 });
+        
+        res.json(listings);
+        
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({
+            message: 'Server error searching listings'
+        });
+    }
+});
+
 // GET all listings
 router.get('/', async (req, res) => {
     try {
+    
         const listings = await Listing.find()
             .populate('postedBy', 'username')
             .sort({ createdAt: -1 });
