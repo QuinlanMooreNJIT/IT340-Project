@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../services/cart.service';
 
@@ -14,23 +14,34 @@ export class CartComponent implements OnInit {
   cartItems: any[] = [];
   loading = false;
   
-  constructor(private cartService: CartService) {}
+  constructor(private cartService: CartService, private cdr: ChangeDetectorRef) {
+    console.log("CART COMPONENT CONSTRUCTOR FIRED")
+  }
   
   ngOnInit(): void {
     this.getCart();
   }
   
   getCart() {
+    console.log("getCart() FIRED");
+    
     this.loading = true;
     
     this.cartService.getCart().subscribe({
       next: (res: any) => {
+        console.log("CART RESPONSE:", res);
+        
         this.cartItems = res.listings || [];
+        
+        console.log("cartItems AFTER SET:", this.cartItems);
+        
+        console.log("SETTING loading FALSE");
         this.loading = false;
+        this.cdr.detectChanges();
       },
-      error: () => {
+      error: (err) => {
+        console.log("CART ERROR:", err);
         this.loading = false;
-        alert('Failed to load cart')
       }
     });
   }

@@ -30,73 +30,130 @@ export class ListingDetail implements OnInit {
     private listingService: ListingService,
     private commentService: CommentService,
     private cartService: CartService,
-    public auth: AuthService
+    public auth: AuthService,
+    private cdr: ChangeDetectorRef
   ) {}
   loading: boolean = true;
   
   ngOnInit(): void {
+    
+    console.log("LISTING DETAIL INIT");
+  
     this.route.paramMap
       .pipe(
         switchMap(params => {
+        
           const id = params.get('id');
+          
+          console.log("ROUTE PARAM ID:", id);
+          
           if (!id) throw new Error('No ID');
           
           return this.listingService.getListingById(id);
         })
       )
       .subscribe({
+      
         next: (data) => {
+        
+          console.log("LISTING LOADED:", data);
+        
           this.listing = data;
+          
+          this.loading = false;
+          
+          this.cdr.detectChanges();
+          
           this.loadComments();
         },
         error: (err) => {
-          console.error('Error loading listing:', err);
+        
+          console.error("LISTING ERROR:", err);
+        
+          this.loading = false;
         }
       });
   }
+  
   loadComments(): void {
-    if(!this.listing?._id) return;
+  
+    console.log("loadComments CALLED");
+  
+    if(!this.listing?._id) {
+      console.log("NO LISTING ID FOR COMMENTS");
+      return;
+    }
     
-    this.commentService.getComments(this.listing._id).subscribe({
+    this.commentService.getComments(this.listing?._id).subscribe({
+    
       next: (data) => {
+      
+        console.log("COMMENTS LOADED:", data);
+      
         this.comments = data;
       },
+      
       error: (err) => {
-        console.error('Error loading comments:', err);
+      
+        console.error('COMMENTS ERROR:', err);
       }
     });
   }
   
   submitComment(): void {
+  
     if (!this.newComment.trim()) return;
     
     this.commentService.addComment(
-      this.listing._id,
+      this.listing?._id,
       this.newComment
     ).subscribe({
+    
       next: () => {
+      
+        console.log("COMMENT POSTED");
+      
         this.newComment = '';
+        
         this.loadComments();
       },
       error: (err) => {
-        console.error('Error posting comments:', err);
+      
+        console.error('ERROR POST COMMENT', err);
       }
     });
   }
   
   addToCart(): void {
-    if (!this.listing?._id || this.isAddingToCart) return;
+  
+    console.log("addToCart CLICKED");
+  
+    if (!this.listing?._id || this.isAddingToCart) {
+      console.log("addToCart BLOCKED");
+      return;
+    }
     
     this.isAddingToCart = true;
+    
     this.cartMessage = '';
     
-    this.cartService.addToCart(this.listing._id).subscribe({
+    this.cartService.addToCart(this.listing?._id).subscribe({
+    
       next: (res) => {
+      
+        console.log("ADD TO CART SUCCESS:", res);
+      
         this.cartMessage = 'Item added to cart';
+        
         this.isAddingToCart = false;
       },
       error: (err) => {
-        this.cartMessage = err.error.message || 'Error adding to cart';
+      
+        console.error("ADD TO CART ERROR:", err);
+        
+        this.cartMessage = 
+          err.error.message || 'Error adding to cart';
+          
         this.isAddingToCart = false;
       }
     });
