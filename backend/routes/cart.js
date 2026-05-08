@@ -17,10 +17,7 @@ router.post("/add", auth, async (req, res) => {
         
         const { listingId } = req.body;
         
-        const userId = 
-            req.user?.id ||
-            res.user?.userId ||
-            req.user?.id;
+        const userId = req.user.userId;
         
         console.log("RESOLVED USER ID:", userId);
         console.log("LISTING ID", listingId);
@@ -42,9 +39,9 @@ router.post("/add", auth, async (req, res) => {
             });
         }
         
-        console.log("FIND CART FOR USER:", req.user.userId);
+        console.log("FIND CART FOR USER:", userId);
         
-        let cart = await Cart.findOne({ user: req.user.userId });
+        let cart = await Cart.findOne({ user: userId });
         
         console.log("CART EXISTS", !!cart);
         
@@ -52,7 +49,7 @@ router.post("/add", auth, async (req, res) => {
             console.log("CREATING NEW CART");
             
             cart = new Cart({
-                user: req.user.userId,
+                user: userId,
                 listings: [],
             });
         }
@@ -104,7 +101,7 @@ router.get("/", auth, async (req, res) => {
         console.log("USER:", req.user);
         
         const cart = await Cart.findOne({
-            user: req.user.userId,
+            user: userId,
         }).populate("listings");
         
         console.log("CART RESULT:", cart);
@@ -135,9 +132,9 @@ router.delete("/:listingId", auth, async (req, res) => {
     
         console.log("\n ===== DELETE FROM CART ======");
         console.log("listingId:", req.params.listingId);
-        console.log("user:", req.user.userId);
+        console.log("user:", userId);
         
-        const cart = await Cart.findOne({ user: req.user.userId });
+        const cart = await Cart.findOne({ user: userId });
     
         if (!cart) {
             console.log("NO CART FOUND");
@@ -172,12 +169,12 @@ router.post("/checkout", auth, async (req, res) => {
     try {
     
         console.log("\n ===== CHECKOUT ======");
-        console.log("USER:", req.user.userId);
+        console.log("USER:", userId);
         console.log("CART:", cart);
         console.log("ITEMS:", purchasedListings);
         
     const cart = await Cart.findOne({
-        user: req.user.userId,
+        user: userId,
     }).populate("listings");
     
     if (!cart || cart.listings.length === 0) {
@@ -200,7 +197,7 @@ router.post("/checkout", auth, async (req, res) => {
     
     await cart.save();
     
-    const user = await User.findById(req.user.userId);
+    const user = await User.findById(userId);
     
     const itemList = purchasedListings
         .map((item) => `- ${item.title}`)
