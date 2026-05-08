@@ -3,7 +3,6 @@ const router = express.Router();
 
 const Cart = require("../models/Cart");
 const Listing = require("../models/Listing");
-
 const nodemailer = require("nodemailer");
 const User = require("../models/User")
 
@@ -11,38 +10,77 @@ const auth = require("../middleware/authMiddleware")
 
 router.post("/add", auth, async (req, res) => {
     try {
+        console.log("USER CART ROUTE FILE VERSION 2");
+        console.log("\n ====== CART ADD ROUTE HIT ======");
+        console.log("BODY:", req.body);
+        console.log("RAW USER", req.user);
+        
         const { listingId } = req.body;
         
+        const userId = 
+            req.user?.id ||
+            res.user?.userId ||
+            req.user?.id;
+        
+        console.log("RESOLVED USER ID:", userId);
+        console.log("LISTING ID", listingId);
+        
+        if (!listingId) {
+            console.log("MISSING listingId");
+            return res.status(404).json({ message: "Listing not found" });
+        }
+        
+        console.log("FIND LISTING....");
         const listing = await Listing.findById(listingId);
         
+        console.log("Listing found:", listing ? "YES" : "NO");
+        
         if (!listing) {
+            console.log("LISTING NOT FOUND IN DB");
             return res.status(404).json({
                 message: "Listing not found",
             });
         }
         
-        let cart = await Cart.findOne({ user: req.user.id });
+        console.log("FIND CART FOR USER:", req.user.userId);
+        
+        let cart = await Cart.findOne({ user: req.user.userId });
+        
+        console.log("CART EXISTS", !!cart);
         
         if (!cart) {
+            console.log("CREATING NEW CART");
+            
             cart = new Cart({
-            user: req.user.id,
-            listings: [],
+                user: req.user.userId,
+                listings: [],
             });
         }
+        
+        console.log("CHECKING IF ITEM ALREADY IN CART....");
         
         const alreadyInCart = cart.listings.some(
             (item) => item.toString() === listingId
         );
         
+        console.log("alreadyInCart", alreadyInCart);
+        
         if (alreadyInCart) {
+            console.log("ITEM ALREADY IN CART");
             return res.status(400).json({
                 message: "Item already in cart",
             });
         }
         
+        console.log("ADDING ITEM TO CART");
+        
         cart.listings.push(listingId);
         
+        console.log("SAVING CART......");
+        
         await cart.save();
+        
+        console.log("CART SAVED SUCCESSFULLY");
         
         res.json({
             message: "Item added to cart",
@@ -50,8 +88,7 @@ router.post("/add", auth, async (req, res) => {
         });
         
     } catch (error) {
-        console.error(error);
-        
+        console.error("CART ADD ERROR", error);       
         res.status(500).json({
             message: "Server error",
         });
@@ -60,25 +97,21 @@ router.post("/add", auth, async (req, res) => {
 
 router.get("/", auth, async (req, res) => {
 
-    console.log("ENTERED GET /cart ROUTE");
+    console.log("\n ===== GET /CART HIT =====");
     
     try {
         
-        console.log("REQ.USER:", req.user);
+        console.log("USER:", req.user);
         
         const cart = await Cart.findOne({
-            user: req.user.id,
+            user: req.user.userId,
         }).populate("listings");
         
-        console.log("CART QUERY RESULT:", cart);
+        console.log("CART RESULT:", cart);
         
         if (!cart) {
-        
-            console.log("NO CART FOUND");
-            
-            return res.json({
-                listings: [],
-            });
+            console.log("NO CART FOUND - RETURNING EMPTY");
+            return res.json({ listings: [] });
         }
         
         console.log("SENDING CART RESPONSE");
@@ -87,7 +120,7 @@ router.get("/", auth, async (req, res) => {
         
     } catch (error) {
         
-        console.log("GET /cart ERROR");
+        console.log("GET CART ERROR:", error);
         
         console.error(error);
         
@@ -100,10 +133,17 @@ router.get("/", auth, async (req, res) => {
 router.delete("/:listingId", auth, async (req, res) => {
     try {
     
-    if (!cart) {
-        return res.status(404).json({
-            message: "Cart not found",
-        });
+        console.log("\n ===== DELETE FROM CART ======");
+        console.log("listingId:", req.params.listingId);
+        console.log("user:", req.user.userId);
+        
+        const cart = await Cart.findOne({ user: req.user.userId });
+    
+        if (!cart) {
+            console.log("NO CART FOUND");
+            return res.status(404).json({
+                message: "Cart not found",
+            });
     }
     
     cart.listings = cart.listings.filter(
@@ -112,13 +152,15 @@ router.delete("/:listingId", auth, async (req, res) => {
     
     await cart.save();
     
+    console.log("ITEM REMOVED");
+    
     res.json({
         message: "Item removed from cart",
         cart,
     });
 
     } catch (error) {
-        console.error(error);
+        console.error("DELETE CART ERROR:", error);
         
         res.status(500).json({
             message: "Server error",
@@ -128,8 +170,14 @@ router.delete("/:listingId", auth, async (req, res) => {
 
 router.post("/checkout", auth, async (req, res) => {
     try {
+    
+        console.log("\n ===== CHECKOUT ======");
+        console.log("USER:", req.user.userId);
+        console.log("CART:", cart);
+        console.log("ITEMS:", purchasedListings);
+        
     const cart = await Cart.findOne({
-        user: req.user.id,
+        user: req.user.userId,
     }).populate("listings");
     
     if (!cart || cart.listings.length === 0) {
@@ -152,7 +200,7 @@ router.post("/checkout", auth, async (req, res) => {
     
     await cart.save();
     
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.userId);
     
     const itemList = purchasedListings
         .map((item) => `- ${item.title}`)
@@ -167,7 +215,7 @@ router.post("/checkout", auth, async (req, res) => {
     });
     
     await transporter.sendMail({
-        from: process.env.EMAIL_USER,
+        from: proccess.env.EMAIL_USER,
         to: user.email,
         subject: "Purchase Confirmation",
         text:`
