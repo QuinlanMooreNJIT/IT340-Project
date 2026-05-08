@@ -47,12 +47,10 @@ export class ListingDetail implements OnInit {
       .subscribe({
         next: (data) => {
           this.listing = data;
-          this.loading = false;
           this.loadComments();
         },
         error: (err) => {
           console.error('Error loading listing:', err);
-          this.loading = false;
         }
       });
   }
