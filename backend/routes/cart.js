@@ -129,7 +129,7 @@ router.post("/checkout", auth, async (req, res) => {
     const purchasedListings = cart.listings;
     
     const listingIds = purchasedListings.map(
-        (listing) => listin._id
+        (listing) => listing._id
     );
     
     await Listing.deleteMany({
@@ -150,7 +150,7 @@ router.post("/checkout", auth, async (req, res) => {
         service: "gmail",
         auth: {
             user: process.env.EMAIL_USER,
-            post: proccess.env.EMAIL_PASS,
+            pass: proccess.env.EMAIL_PASS,
         },
     });
     
