@@ -1,1 +1,27 @@
-<p>cart works!</p>
+<div *ngIf="loading">Loading cart...</div>
+
+<div *ngIf="!loading && cartItems.length === 0">
+  Your cart is empty
+</div>
+
+<div*ngFor="let item of cartItems" class="cart-item">
+
+  <img [src]="item.image" width="100" />
+  
+  <h3>{{ item.title }}</h3>
+  
+  <p>{{ item.price }}</p>
+  
+  <button (click)="removeItem(item._id)">
+    Remove
+  </button>
+  
+</div>
+
+<hr />
+
+<button
+  *ngIf="cartItems.length > 0"
+  (click)="checkout()">
+  BUY / CHECKOUT
+</button>
