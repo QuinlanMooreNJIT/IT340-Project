@@ -59,21 +59,36 @@ router.post("/add", auth, async (req, res) => {
 });
 
 router.get("/", auth, async (req, res) => {
+
+    console.log("ENTERED GET /cart ROUTE");
+    
     try {
+        
+        console.log("REQ.USER:", req.user);
         
         const cart = await Cart.findOne({
             user: req.user.id,
         }).populate("listings");
         
+        console.log("CART QUERY RESULT:", cart);
+        
         if (!cart) {
+        
+            console.log("NO CART FOUND");
+            
             return res.json({
                 listings: [],
             });
         }
         
+        console.log("SENDING CART RESPONSE");
+        
         res.json(cart);
         
     } catch (error) {
+        
+        console.log("GET /cart ERROR");
+        
         console.error(error);
         
         res.status(500).json({
@@ -84,9 +99,6 @@ router.get("/", auth, async (req, res) => {
 
 router.delete("/:listingId", auth, async (req, res) => {
     try {
-    const cart = await Cart.findOne({
-        user: req.user.userid,
-    });
     
     if (!cart) {
         return res.status(404).json({
@@ -149,7 +161,7 @@ router.post("/checkout", auth, async (req, res) => {
     const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: process.env.EMAIL_USER,
+            user: proccess.env.EMAIL_USER,
             pass: proccess.env.EMAIL_PASS,
         },
     });
