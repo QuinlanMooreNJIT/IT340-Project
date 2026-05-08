@@ -7,6 +7,7 @@ import { AuthService } from '../services/auth.service';
 import { ListingService } from '../services/listing.service';
 import { CommentService } from '../services/comment.service';
 import { CartService } from '../services/cart.service';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-listing-detail',
@@ -33,11 +34,16 @@ export class ListingDetail implements OnInit {
   ) {}
   
   ngOnInit(): void {
-      this.route.paramMap.subscribe(params => {
-        const id = params.get('id');
-        if (!id) return;
-      
-      this.listingService.getListingById(id).subscribe({
+    this.route.paramMap
+      .pipe(
+        switchMap(params => {
+          const id = params.get('id');
+          if (!id) throw new Error('No ID');
+          
+          return this.listingService.getListingById(id);
+        })
+      )
+      .subscribe({
         next: (data) => {
           this.listing = data;
           this.loadComments();
@@ -46,8 +52,7 @@ export class ListingDetail implements OnInit {
         error: (err) => {
           console.error('Error loading listing:', err);
         }
-      });    
-    });  
+      });
   }
   loadComments(): void {
     if(!this.listing?._id) return;
