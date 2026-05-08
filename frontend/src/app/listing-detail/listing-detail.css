@@ -14,3 +14,22 @@
 .listing-info p {
   margin: 8px 0;
 }
+
+.add-to-cart-btn {
+  padding: 10px 15px;
+  background: #2d6cdf;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.add-to-cart-btn:disabled {
+  background: gray;
+  cursor: not-allowed;
+}
+
+.cart-message {
+  margin-top: 5px;
+  color: green;
+}

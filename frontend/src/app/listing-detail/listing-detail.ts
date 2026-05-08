@@ -23,6 +23,7 @@ export class ListingDetail implements OnInit {
   comments: any[] = [];
   newComment: string = '';
   isAddingToCart: boolean = false;
+  cartMessage = '';
   
   constructor(
     private route: ActivatedRoute,

@@ -8,6 +8,21 @@
     class="listing-image"
   />
   
+  <div class="cart-actions" *ngIf="auth.isLoggedIn()">
+    
+    <button
+      (click)="addToCart(listing._id)"
+      [disabled]="isAddingToCart"
+      class="add-to-cart-btn"
+    >
+      {{ isAddingToCart ? 'Adding...' : 'Add to Cart' }}
+    </button>
+    
+    <p *ngIf="cartMessage" class="cart-message">
+        {{ cartMessage }}
+    </p>
+  </div>
+  
   <div class="listing-info">
     
     <p><strong>Description:</strong></p>
