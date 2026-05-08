@@ -32,6 +32,7 @@ export class ListingDetail implements OnInit {
     private cartService: CartService,
     public auth: AuthService
   ) {}
+  loading: boolean = true;
   
   ngOnInit(): void {
     this.route.paramMap
@@ -46,10 +47,12 @@ export class ListingDetail implements OnInit {
       .subscribe({
         next: (data) => {
           this.listing = data;
+          this.loading = false;
           this.loadComments();
         },
         error: (err) => {
           console.error('Error loading listing:', err);
+          this.loading = false;
         }
       });
   }
