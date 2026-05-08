@@ -6,6 +6,7 @@ import { LoginComponent } from './login/login.component';
 import { ListingDetail } from './listing-detail/listing-detail';
 import { MfaVerify } from './auth/mfa-verify/mfa-verify';
 import { SearchResultsComponent } from './components/search-results/search-results';
+import { CartComponent } from './cart/cart';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -14,5 +15,6 @@ export const routes: Routes = [
   { path: 'mfa-verify', component: MfaVerify },
   { path: 'listing/:id', component: ListingDetail },
   { path: 'search', component: SearchResultsComponent },
+  { path: 'cart', component: CartComponent },
   { path: '**', redirectTo: '' },
 ];
