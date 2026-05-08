@@ -33,24 +33,22 @@ export class ListingDetail implements OnInit {
   ) {}
   
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-  
-    if (!id) return;
-    
-    this.listingService.getListingById(id).subscribe({
-      next: (data) => {
-        this.listing = data;
-        
-        this.loadComments();
-        
-        this.cdr.detectChanges();
-      },
-      error: (err) => {
-        console.error('Error loading listing:', err);
-      }
-    });    
+      this.route.paramMap.subscribe(params => {
+        const id = params.get('id');
+        if (!id) return;
+      
+      this.listingService.getListingById(id).subscribe({
+        next: (data) => {
+          this.listing = data;
+          this.loadComments();
+          this.cdr.detectChanges();
+        },
+        error: (err) => {
+          console.error('Error loading listing:', err);
+        }
+      });    
+    });  
   }
-  
   loadComments(): void {
     if(!this.listing?._id) return;
     
@@ -81,7 +79,7 @@ export class ListingDetail implements OnInit {
     });
   }
   
-  addedToCart(): void {
+  addToCart(): void {
     if (!this.listing?._id || this.isAddingToCart) return;
     
     this.isAddingToCart = true;
