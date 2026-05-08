@@ -45,9 +45,17 @@ export class ListingDetail implements OnInit {
         
           const id = params.get('id');
           
+          console.log("ROUTE PARAM EMITTED");
           console.log("ROUTE PARAM ID:", id);
           
-          if (!id) throw new Error('No ID');
+          if (!id) {
+            console.error("ROUTE MISSING ID");
+            throw new Error('No ID');
+          }
+          
+          console.log("HTTP calling getListingById");
+          console.log("HTTP Request URL param:", id);
+          
           
           return this.listingService.getListingById(id);
         })
@@ -56,41 +64,60 @@ export class ListingDetail implements OnInit {
       
         next: (data) => {
         
-          console.log("LISTING LOADED:", data);
+          console.log("HTTP SUCCESS Listing received");
+          console.log("HTTP RESPONSE", data);
         
           this.listing = data;
           
+          console.log("STATE LISTING ASSIGNED:", this.listing);
+          
           this.loading = false;
           
+          console.log("STATE loading set to FALSE");
+          
           this.cdr.detectChanges();
+          
+          console.log("CDR detectChanges Triggered");
           
           this.loadComments();
         },
         error: (err) => {
         
+          console.error("HTTP ERROR Listing load failed");
           console.error("LISTING ERROR:", err);
         
           this.loading = false;
+          
+          console.log("STATE loading set to FALSE thru error");
         }
       });
   }
   
   loadComments(): void {
   
-    console.log("loadComments CALLED");
+    console.log("COMMENTS loadComments CALLED");
+    
+    console.log("COMMENTS current listing state:", this.listing);
+    
+    const id = this.listing?._id;
+    
+    console.log("COMMENTS extracted ID:", id);
   
-    if(!this.listing?._id) {
-      console.log("NO LISTING ID FOR COMMENTS");
+    if(!id) {
+    
+      console.warn("COMMENTS NO LISTING ID - abort request");      
       return;
     }
     
-    this.commentService.getComments(this.listing?._id).subscribe({
+    this.commentService.getComments(id).subscribe({
     
       next: (data) => {
       
-        console.log("COMMENTS LOADED:", data);
+        console.log("COMMENTS SUCCESS:", data);
       
         this.comments = data;
+        
+        console.log("STATE comments assigned", this.comments);
       },
       
       error: (err) => {
@@ -126,35 +153,51 @@ export class ListingDetail implements OnInit {
   
   addToCart(): void {
   
-    console.log("addToCart CLICKED");
-  
+    console.log("CART addToCart CLICKED");
+    
+    console.log("CART LISING STATE:", this.listing);
+    console.log("CART LISTING ID", this.listing?._id);
+    
     if (!this.listing?._id || this.isAddingToCart) {
-      console.log("addToCart BLOCKED");
+    
+      console.warn("CART BLOCKED")
+    
+      console.log("CART isAddingToCart", this.isAddingToCart);
+      
       return;
     }
     
     this.isAddingToCart = true;
     
-    this.cartMessage = '';
+    console.log("CART HTTP SENDING REQUEST");
+    console.log("CART HTTP PAYLOAD", {
+      listingId: this.listing._id
+    });
     
     this.cartService.addToCart(this.listing?._id).subscribe({
     
       next: (res) => {
       
-        console.log("ADD TO CART SUCCESS:", res);
+        console.log("CART SUCCESS", res);
       
         this.cartMessage = 'Item added to cart';
         
         this.isAddingToCart = false;
+        
+        console.log("CART STATE reset complete");
       },
       error: (err) => {
       
-        console.error("ADD TO CART ERROR:", err);
+        console.error("CART ERROR", err);
+        
+        console.log("CART ERROR BODY", err.error);
         
         this.cartMessage = 
           err.error.message || 'Error adding to cart';
           
         this.isAddingToCart = false;
+        
+        console.log("CART STATE rest after error");
       }
     });
   }
