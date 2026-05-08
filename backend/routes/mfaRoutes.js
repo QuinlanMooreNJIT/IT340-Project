@@ -28,7 +28,7 @@ router.post('/verify', async (req, res) => {
         await MfaToken.deleteMany({ userId });
         
         const token = jwt.sign(
-            { id: user._id, username: user.username },
+            { userid: user._id, username: user.username },
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );

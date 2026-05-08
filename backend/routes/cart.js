@@ -85,7 +85,7 @@ router.get("/", auth, async (req, res) => {
 router.delete("/:listingId", auth, async (req, res) => {
     try {
     const cart = await Cart.findOne({
-        user: req.user.id,
+        user: req.user.userid,
     });
     
     if (!cart) {
