@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +8,12 @@ import { Observable } from 'rxjs';
 export class CartService {
   
   private API_URL = 'http://192.168.10.20:3000/cart';
+  private cartCount = new BahaviorSibject<number>(0);
+  cartCount$ = this.cartCount.asObservable();
+  
+  setCount(count: number) {
+    this.cartCount.next(count);
+  }
   
   constructor(private http: HttpClient) {}
   
