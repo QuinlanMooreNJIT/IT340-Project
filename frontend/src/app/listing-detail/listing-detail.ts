@@ -2,10 +2,11 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { AuthService } from '../services/auth.service';
 
+import { AuthService } from '../services/auth.service';
 import { ListingService } from '../services/listing.service';
 import { CommentService } from '../services/comment.service';
+import { CartService } from '../services/cart.service';
 
 @Component({
   selector: 'app-listing-detail',
@@ -20,11 +21,13 @@ export class ListingDetail implements OnInit {
   
   comments: any[] = [];
   newComment: string = '';
+  isAddingToCart: boolean = false;
   
   constructor(
     private route: ActivatedRoute,
     private listingService: ListingService,
     private commentService: CommentService,
+    private cartService: CartService,
     private cdr: ChangeDetectorRef,
     public auth: AuthService
   ) {}
@@ -74,6 +77,23 @@ export class ListingDetail implements OnInit {
       },
       error: (err) => {
         console.error('Error posting comments:', err);
+      }
+    });
+  }
+  
+  addedToCart(): void {
+    if (!this.listing?._id || this.isAddingToCart) return;
+    
+    this.isAddingToCart = true;
+    
+    this.cartService.addToCart(this.listing._id).subscribe({
+      next: (res) => {
+        alert('Item added to cart');
+        this.isAddingToCart = false;
+      },
+      error: (err) => {
+        alert(err.error.message || 'Error adding to cart');
+        this.isAddingToCart = false;
       }
     });
   }
