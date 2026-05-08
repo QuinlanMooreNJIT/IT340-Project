@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet, NavigationEnd } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -16,9 +16,16 @@ export class AppComponent {
   
   searchQuery: string = '';
   
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
   
-  onSearch(): void {
+      this.router.events.subscribe(event => {
+        if (event instanceof NavigationEnd) {
+          console.log("NAVIGATED TO:", event.urlAfterRedirects);
+        }
+      });
+    }
+  
+    onSearch(): void {
     
     const query = this.searchQuery.trim();
     
