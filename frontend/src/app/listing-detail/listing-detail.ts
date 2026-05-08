@@ -30,7 +30,6 @@ export class ListingDetail implements OnInit {
     private listingService: ListingService,
     private commentService: CommentService,
     private cartService: CartService,
-    private cdr: ChangeDetectorRef,
     public auth: AuthService
   ) {}
   
@@ -48,7 +47,6 @@ export class ListingDetail implements OnInit {
         next: (data) => {
           this.listing = data;
           this.loadComments();
-          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Error loading listing:', err);
@@ -89,14 +87,15 @@ export class ListingDetail implements OnInit {
     if (!this.listing?._id || this.isAddingToCart) return;
     
     this.isAddingToCart = true;
+    this.cartMessage = '';
     
     this.cartService.addToCart(this.listing._id).subscribe({
       next: (res) => {
-        alert('Item added to cart');
+        this.cartMessage = 'Item added to cart';
         this.isAddingToCart = false;
       },
       error: (err) => {
-        alert(err.error.message || 'Error adding to cart');
+        this.cartMessage = err.error.message || 'Error adding to cart';
         this.isAddingToCart = false;
       }
     });

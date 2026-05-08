@@ -3,7 +3,7 @@
   <h1>{{ listing.title }}</h1>
   
   <img
-    *ngIf="listing.images.length > 0"
+    *ngIf="listing.images?.length > 0"
     [src]="listing.images[0]"
     class="listing-image"
   />
@@ -11,7 +11,7 @@
   <div class="cart-actions" *ngIf="auth.isLoggedIn()">
     
     <button
-      (click)="addToCart(listing._id)"
+      (click)="addToCart()"
       [disabled]="isAddingToCart"
       class="add-to-cart-btn"
     >
@@ -32,7 +32,7 @@
     
     <p><strong>Category:</strong>{{ listing.category }}</p>
     
-    <p *ngIf="listing.keywords.length > 0">
+    <p *ngIf="listing.keywords?.length > 0">
       <strong>Keywords:</strong>
       {{ listing.keywords.join(', ') }}
     </p>
