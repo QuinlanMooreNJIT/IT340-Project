@@ -8,7 +8,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 export class CartService {
   
   private API_URL = 'http://192.168.10.20:3000/cart';
-  private cartCount = new BahaviorSibject<number>(0);
+  private cartCount = new BehaviorSubject<number>(0);
   cartCount$ = this.cartCount.asObservable();
   
   setCount(count: number) {
