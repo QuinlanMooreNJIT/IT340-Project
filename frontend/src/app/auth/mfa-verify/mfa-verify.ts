@@ -41,6 +41,8 @@ export class MfaVerify {
         
         this.auth.setToken(res.token);
         
+        this.auth.setUser(res.user);
+        
         localStorage.removeItem('mfa_userId');
         
         this.router.navigate(['/home']);
