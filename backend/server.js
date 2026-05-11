@@ -35,8 +35,8 @@ const cartRoutes = require("./routes/cart");
 app.use("/api/auth", authRoutes)
 app.use("/api/listings", listingsRoutes);
 app.use("/api/mfa", mfaRoutes);
-app.use("/comments", commentsRoutes);
-app.use("/cart", cartRoutes);
+app.use("/api/comments", commentsRoutes);
+app.use("/api/cart", cartRoutes);
 
 const requireAuth = require("./middleware/requireAuth");
 
