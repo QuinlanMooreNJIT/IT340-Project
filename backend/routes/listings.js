@@ -6,7 +6,7 @@ const Listing = require('../models/Listing');
 const Comment = require('../models/comment');
 
 const requireAuth = require('../middleware/requireAuth');
-const { isListingOwnerOrAdmin } = require{'../middleware/ownership'};
+const isListingOwnerOrAdmin = require('../middleware/ownership');
 
 //SEARCH listings
 router.get('/search', async (req, res) => {
@@ -141,7 +141,7 @@ router.post('/', requireAuth, async (req, res) => {
 
 
 //  UPDATE listing
-router.post('/:id', requireAuth, isListingOwnerOrAdmin, async (req, res) => {
+router.put('/:id', requireAuth, isListingOwnerOrAdmin, async (req, res) => {
 
     try {
     
@@ -157,7 +157,7 @@ router.post('/:id', requireAuth, isListingOwnerOrAdmin, async (req, res) => {
         });
         
     } catch (err) {
-        console.error(err):
+        console.error(err);
         res.status(500).json({ message: 'Server error updating listing' });
     }
 });
@@ -168,7 +168,7 @@ router.delete('/:id', requireAuth, isListingOwnerOrAdmin, async (req, res) => {
     
     try {
     
-        await res.listing.deleteOne();
+        await req.listing.deleteOne();
         
         res.json({
             message: "Listing deleted"

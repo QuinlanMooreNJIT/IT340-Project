@@ -46,11 +46,11 @@ app.use("/comments", commentsRoutes);
 const cartRoutes = require("./routes/cart");
 app.use("/cart", cartRoutes);
 
-const authMiddleware = require("./middleware/authMiddleware");
+const requireAuth = require("./middleware/requireAuth");
 
 app.get('/', (req, res) => res.send('Backend is running!'));
 
-app.get("/api/protected", authMiddleware, (req, res) => {
+app.get("/api/protected", requireAuth, (req, res) => {
     res.json({
         message: "You access protected data",
         user: req.user

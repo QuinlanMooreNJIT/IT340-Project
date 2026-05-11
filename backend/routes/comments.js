@@ -25,7 +25,7 @@ router.post('/', requireAuth, async (req, res) => {
         
         const newComment = new Comment ({
             listingId,
-            userId: req.user.id,
+            userId: req.user.userId,
             content: content.trim()
         });
         
@@ -72,7 +72,7 @@ router.put('/:id', requireAuth, isCommentOwnerOrAdmin, async (req, res) =>{
         
         const { content } = req.body;
         
-        if (!comment || content.trim() === '') {
+        if (!content || content.trim() === '') {
             return res.status(400).json({ message : 'Comment cannot be empty' });
         }
         
@@ -98,7 +98,7 @@ router.delete('/:id', requireAuth, isCommentOwnerOrAdmin, async (req, res) => {
     
     try {
         
-        await res.comment.deleteOne();
+        await req.comment.deleteOne();
         
         res.json({
             message: "Comment deleted"
