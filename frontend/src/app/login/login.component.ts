@@ -15,24 +15,41 @@ export class LoginComponent {
   username = '';
   password = '';
   otp = '';
+  message = '';
   
   mfaRequired = false;
   userIdFromMfa: string | null = null;
   
-  constructor(private auth: authService, private router: Router) {}
+  constructor(private auth: AuthService, private router: Router) {}
   
   login() {
   
-    this.authService.login(this.username, this.password)
-      .subscribe((res: any) =>{
+  this.auth.login(this.username, this.password)
+    .subscribe({
+    
+      next: (res: any) => {
       
-      if (res.mfaRequired) {
-        this.mfaRequired = true;
-        this.userIdFromMfa = res.userId;
-        return;
+        if (res.mfaRequired) {
+          
+          this.message = "Check your email for verification code";
+          
+          localStorage.setItem('mfa_userId', res.userId);
+          
+          this.router.navigate(['/mfa-verify']);
+          
+          return;
+        }
+        
+        this.message = "Unexpected login response (no MFA flag)";
+        console.log("WARNING: No MFA flag returned", res);
+      },
+      
+      error: (err) => {
+        
+        console.log("LOGIN ERROR:", err)
+        
+        this.message = "Invalid Credentials";
       }
-      
-      this.handleLoginSuccess(res)
     });
   }
   
@@ -40,7 +57,7 @@ export class LoginComponent {
   
     if (!this.userIdFromMfa) return;
     
-    this.authService.verifyMfa({
+    this.auth.verifyMfa({
       userId: this.userIdFromMfa,
       otp: this.otp
     }).subscribe((res: any) => {
@@ -55,8 +72,8 @@ export class LoginComponent {
   
   private handleLoginSuccess(res: any) {
     
-    this.authService.setToken(res.token);
-    this.authService.setUser(res.user);
+    this.auth.setToken(res.token);
+    this.auth.setUser(res.user);
     
     console.log('LOGIN COMPLETE:', res.user);
   }

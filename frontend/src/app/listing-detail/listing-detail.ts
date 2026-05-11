@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { AuthService } from '../services/auth.service';
@@ -19,21 +19,23 @@ import { switchMap } from 'rxjs/operators';
 export class ListingDetail implements OnInit {
 
   listing: any;
-  
   comments: any[] = [];
   newComment: string = '';
+  
   isAddingToCart: boolean = false;
   cartMessage = '';
+  
+  loading: boolean = true;
   
   constructor(
     private route: ActivatedRoute,
     private listingService: ListingService,
     private commentService: CommentService,
     private cartService: CartService,
+    private router: Router,
     public auth: AuthService,
     private cdr: ChangeDetectorRef
   ) {}
-  loading: boolean = true;
   
   ngOnInit(): void {
     
@@ -93,11 +95,16 @@ export class ListingDetail implements OnInit {
       });
   }
   
+  canModify(resourceUserId: string): boolean {
+    return this.auth.canModify(resourceUserId);
+  }
+  
   loadComments(): void {
   
     console.log("COMMENTS loadComments CALLED");
     
     console.log("COMMENTS current listing state:", this.listing);
+
     
     const id = this.listing?._id;
     
@@ -147,6 +154,54 @@ export class ListingDetail implements OnInit {
       error: (err) => {
       
         console.error('ERROR POST COMMENT', err);
+      }
+    });
+  }
+  
+  editComment(comment: any) {
+    
+    const updated = prompt("Edit comment:", comment.content);
+    
+    if (!updated) return;
+    
+    this.commentService.updateComment(comment._id, {
+      content: updated
+    }).subscribe({
+      next: (res: any) => {
+        comment.content = res.comment.content;
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
+  
+  deleteComment(id: string) {
+      
+      this.commentService.deleteComment(id).subscribe({
+        next: () => {
+          this.comments = this.comments.filter(c => c._id !== id);
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      });
+  }
+  
+  editListing() {
+    this.router.navigate(['/edit-listing', this.listing._id]);
+  }
+  
+  deleteListing() {
+    
+    if (!this.listing?._id) return;
+    
+    this.listingService.deleteListing(this.listing._id).subscribe({
+      next: () => {
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        console.error(err);
       }
     });
   }
