@@ -85,7 +85,13 @@ export class AuthService {
   }
   
   setUser(user: any) {
-    if (this.isBrowser()) return null;
+    if (this.isBrowser()) {
+      localStorage.setItem('user', JSON.stringify(user))
+    }
+  }
+  
+  getUser(): any {
+    if (!this.isBrowser()) return null;
     
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
@@ -96,8 +102,13 @@ export class AuthService {
     return user ? user.role : null;
   }
   
-  getUserRole(): boolean {
-    return this.getUserRole() === 'admin'; 
+  getUserRole(): String | null {
+  const user = this.getUser();
+    return user ? user.role : null; 
+  }
+  
+  isAdmin(): boolean {
+    return this.getUserRole() === 'admin'
   }
   
   canModify(resourceUserId: string): boolean {
