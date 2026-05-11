@@ -19,7 +19,7 @@ export class LoginComponent {
   mfaRequired = false;
   userIdFromMfa: string | null = null;
   
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private auth: authService, private router: Router) {}
   
   login() {
   
@@ -32,7 +32,7 @@ export class LoginComponent {
         return;
       }
       
-      this.handleLoginSucess(res)
+      this.handleLoginSuccess(res)
     });
   }
   
@@ -42,7 +42,7 @@ export class LoginComponent {
     
     this.authService.verifyMfa({
       userId: this.userIdFromMfa,
-      opt: this.otp
+      otp: this.otp
     }).subscribe((res: any) => {
       
       this.handleLoginSuccess(res);

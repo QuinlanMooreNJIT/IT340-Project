@@ -103,7 +103,7 @@ export class AuthService {
     return user ? user.userId: null;
   }
   
-  getUserRole(): String | null {
+  getUserRole(): string | null {
   const user = this.getUser();
     return user ? user.role : null; 
   }
