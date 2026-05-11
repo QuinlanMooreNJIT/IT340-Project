@@ -15,11 +15,6 @@ app.use(express.json());
 
 const logDirectory = path.join(__dirname, 'logs');
 
-console.log("EMAIL_USER:", process.env.EMAIL_USER);
-console.log("EMAIL_PASS:", process.env.EMAIL_PASS ? "SET" : "MISSING");
-console.log("JWT_SECRET:", process.env.JWT_SECRET ? "SET" : "MISSING");
-
-
 if (!fs.existsSync(logDirectory)) {
     fs.mkdirSync(logDirectory);
 }
@@ -32,23 +27,23 @@ const accessLogStream = fs.createWriteStream(
 app.use(morgan('combined', { stream: accessLogStream }));
 
 const authRoutes = require("./routes/auth");
-app.use("/api/auth", authRoutes)
-
 const listingsRoutes = require("./routes/listings");
-app.use("/api/listings", listingsRoutes);
-
 const mfaRoutes = require("./routes/mfaRoutes");
-app.use("/api/mfa", mfaRoutes);
-
 const commentsRoutes = require('./routes/comments');
-app.use("/comments", commentsRoutes);
-
 const cartRoutes = require("./routes/cart");
-app.use("/cart", cartRoutes);
+
+app.use("/api/auth", authRoutes)
+app.use("/api/listings", listingsRoutes);
+app.use("/api/mfa", mfaRoutes);
+app.use("/api/comments", commentsRoutes);
+app.use("/api/cart", cartRoutes);
 
 const requireAuth = require("./middleware/requireAuth");
 
-app.get('/', (req, res) => res.send('Backend is running!'));
+app.get('/', (req, res) => {
+    res.send('Backend is running!')
+});
+
 
 app.get("/api/protected", requireAuth, (req, res) => {
     res.json({
