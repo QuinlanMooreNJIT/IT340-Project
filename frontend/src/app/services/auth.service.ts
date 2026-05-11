@@ -69,6 +69,7 @@ export class AuthService {
   logout() {
   if (this.isBrowser()){
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
       localStorage.removeItem('mfa_userId');
     }
   }
@@ -99,7 +100,7 @@ export class AuthService {
   
   getUserId(): string | null {
     const user = this.getUser();
-    return user ? user.role : null;
+    return user ? user.userId: null;
   }
   
   getUserRole(): String | null {
