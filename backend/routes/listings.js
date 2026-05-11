@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+
 const Listing = require('../models/Listing');
 const Comment = require('../models/comment');
-const auth = require('../middleware/authMiddleware');
+
+const requireAuth = require('../middleware/requireAuth');
+const { isListingOwnerOrAdmin } = require{'../middleware/ownership'};
 
 //SEARCH listings
 router.get('/search', async (req, res) => {
@@ -37,6 +40,7 @@ router.get('/search', async (req, res) => {
 
 // GET all listings
 router.get('/', async (req, res) => {
+
     try {
     
         const listings = await Listing.find()
@@ -67,19 +71,19 @@ router.get('/', async (req, res) => {
 });
 
 
-// GET single listing by ID
+// GET single listing
 router.get('/:id', async (req, res) => {
+
     try {
+    
         const { id } = req.params;
             
-        // Prevent invalid MongoDB ObjectID crash
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return res.status(400).json({ message: 'Invalid listing ID' });
         }
         
         const listing = await Listing.findById(id)
-            .populate('postedBy', 'username')
-            .exec();
+            .populate('postedBy', 'username');
         
         if (!listing) {
             return res.status(404).json({ message: 'Listing not found' });
@@ -94,26 +98,33 @@ router.get('/:id', async (req, res) => {
 });
 
 
-// CREATE new listing
-router.post('/', auth, async (req, res) => {
+// CREATE listing
+router.post('/', requireAuth, async (req, res) => {
+
     try {
     
-        if (!req.body.title ||
-            !req.body.description ||
-            req.body.price === undefined||
-            !req.body.category
-            ) {
+        const {
+            title,
+            description,
+            price,
+            category,
+            images,
+            keywords
+        } = req.body;
+        
+        if (!title || !description || price === undefined || !category) {
             return res.status(400).json({ message: 'Missing required fields' });
         }
         
+        
         const newListing = new Listing({
-            title: req.body.title,
-            description: req.body.description,
-            price: req.body.price,
-            category: req.body.category,
-            images: req.body.images || [],
-            keywords: req.body.keywords || [],
-            postedBy: req.user.id
+            title,
+            description,
+            price,
+            category,
+            images: images || [],
+            keywords: keywords || [],
+            postedBy: req.user.userId
         });
         
         const saved = await newListing.save();
@@ -125,6 +136,47 @@ router.post('/', auth, async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Server error creating listing' });
+    }
+});
+
+
+//  UPDATE listing
+router.post('/:id', requireAuth, isListingOwnerOrAdmin, async (req, res) => {
+
+    try {
+    
+        const updates = req.body;
+        
+        Object.assign(req.listing, updates);
+        
+        await req.listing.save();
+        
+        res.json({
+            message: "Listing updated",
+            listing: req.listing
+        });
+        
+    } catch (err) {
+        console.error(err):
+        res.status(500).json({ message: 'Server error updating listing' });
+    }
+});
+
+
+//DELETE listing
+router.delete('/:id', requireAuth, isListingOwnerOrAdmin, async (req, res) => {
+    
+    try {
+    
+        await res.listing.deleteOne();
+        
+        res.json({
+            message: "Listing deleted"
+        });
+        
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Server error deleting listing' });
     }
 });
 

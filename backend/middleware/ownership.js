@@ -5,7 +5,7 @@ const isCommentOwnerOrAdmin = async (req, res, next) => {
     
     try {
     
-        const comment = await Comment.findById(Req.params.id);
+        const comment = await Comment.findById(req.params.id);
         
         if (!comment) {
             return res.status(404).json({
@@ -14,10 +14,10 @@ const isCommentOwnerOrAdmin = async (req, res, next) => {
         }
         
         const isOwner = 
-            comment.userId.toString() === res.user.userIdl
+            comment.userId.toString() === req.user.userId;
         
         const isAdmin = 
-            res.user.role === "admin";
+            req.user.role === "admin";
             
         if (!isOwner && !isAdmin) {
             return res.status(403).json({
@@ -52,10 +52,10 @@ const isListingOwnerOrAdmin = async (req, res, next) => {
         }
         
         const isOwner = 
-            listing.postedBy.toString() === res.user.userId;
+            listing.postedBy.toString() === req.user.userId;
             
         const isAdmin = 
-            res.user.role === "admin";
+            req.user.role === "admin";
             
         if (!isOwner && !isAdmin) {
             return res.status(403).json({
