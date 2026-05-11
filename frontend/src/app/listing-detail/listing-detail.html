@@ -2,6 +2,14 @@
   
   <h1>{{ listing.title }}</h1>
   
+  <div clas="listing-actions" *ngIf="canModify(listing.postedBy?._id)">
+  
+    <button (click)="editListing()">Edit Listing</button>
+    
+    <button (click)="deleteListing()">Delete Listing</button>
+    
+  </div>
+  
   <img
     *ngIf="listing.images?.length > 0"
     [src]="listing.images[0]"
@@ -81,6 +89,14 @@
       <small>
         {{ comment.createdAt | date:'short' }}
       </small>
+      
+      <div *ngIf="canModify(comment.userId?._id)" class="comment-actions">
+      
+        <button (Click)="editComment(comment)">Edit</button>
+        
+        <button (Click)="deleteComment(comment._id)">Delete</button>
+        
+      </div>
       
       <hr>
       

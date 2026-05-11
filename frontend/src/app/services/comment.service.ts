@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class CommentService {
 
-  private apiUrl = 'http://192.168.10.20:3000/comments';
+  private apiUrl = 'http://192.168.10.20:3000/api/comments';
   
   constructor(private http: HttpClient) {}
   
@@ -26,6 +26,34 @@ export class CommentService {
     return this.http.post(
       this.apiUrl,
       { listingId, content },
+      { headers }
+    );
+  }
+  
+  updateComment(commentId: string, data: any): Observable<any> {
+    
+    const token = localStorage.getItem('token');
+    
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+    
+    return this.http.put(
+      `${this.apiUrl}/${commentId}`,
+      data,
+      { headers }
+    );
+  }
+  
+  deleteComment(commentId: string): Observable<any> {
+    const token = localStorage.getItem('token');
+    
+    const headers = new HttpHeaders({
+      Authorization: ` Bearer ${token}`
+    });
+    
+    return this.http.delete(
+      `${this.apiUrl}/${commentId}`,
       { headers }
     );
   }
