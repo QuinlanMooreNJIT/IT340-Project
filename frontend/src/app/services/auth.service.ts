@@ -11,8 +11,8 @@ export class AuthService {
   private baseUrl = 'http://192.168.10.20:3000/api/auth';
   
   constructor(
-  private http: HttpClient,
-  @Inject(PLATFORM_ID) private platformId: Object
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {}
   
   private isBrowser(): boolean {
@@ -39,6 +39,7 @@ export class AuthService {
       })
     );
   }
+  
   setMfaUser(userId: string) {
     if (this.isBrowser()) {
       localStorage.setItem('mfa_userId',userId);
@@ -81,5 +82,29 @@ export class AuthService {
   
   isLoggedIn(): boolean {
     return !!this.getToken();
+  }
+  
+  setUser(user: any) {
+    if (this.isBrowser()) return null;
+    
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
+  }
+  
+  getUserId(): string | null {
+    const user = this.getUser();
+    return user ? user.role : null;
+  }
+  
+  getUserRole(): boolean {
+    return this.getUserRole() === 'admin'; 
+  }
+  
+  canModify(resourceUserId: string): boolean {
+    const user = this.getUser();
+    
+    if (!user) return false;
+    
+    return user.role === 'admin' || user.userId === resourceUserId;
   }
 }
