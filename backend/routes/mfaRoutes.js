@@ -6,9 +6,11 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
 router.post('/verify', async (req, res) => {
+
     const { userId, otp } = req.body;
     
     try {
+    
         const record = await MfaToken.findOne({ userId, otp });
         
         if (!record) {
@@ -28,19 +30,30 @@ router.post('/verify', async (req, res) => {
         await MfaToken.deleteMany({ userId });
         
         const token = jwt.sign(
-            { userid: user._id, username: user.username },
+            { 
+                userId: user._id, 
+                role: user.role            
+            },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' }
+            { expiresIn: '1d' }
         );
         
         return res.status(200).json({
             message: 'MFA verified successfully',
+            
             token,
-            user
+            
+            user: {
+                userId: user._id,
+                username: user.username,
+                role: user.role
+            }
         });
         
     } catch (err) {
+    
         console.error(err);
+        
         return res.status(500).json({
             message: 'Server error during MFA verification'
         });
