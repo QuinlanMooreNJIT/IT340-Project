@@ -14,38 +14,50 @@ import { FormsModule } from '@angular/forms';
 export class LoginComponent { 
   username = '';
   password = '';
-  message = '';
+  otp = '';
+  
+  mfaRequired = false;
+  userIdFromMfa: string | null = null;
   
   constructor(private auth: AuthService, private router: Router) {}
   
   login() {
-  console.log("LOGIN FUNCTION FIRED");
-  console.log("USERNAME:", this.username);
-  console.log("PASSWORD:", this.password);  
   
-    this.auth.login(this.username, this.password).subscribe({
-      next: (res: any) => {
+    this.authService.login(this.username, this.password)
+      .subscribe((res: any) =>{
       
-        console.log("LOGIN SUCCESS:", res);
-      
-        if (res.mfaRequired) {
-        
-          this.message = "Check your email for verification code";
-          
-          localStorage.setItem('mfa_userId', res.userId);
-          
-          this.router.navigate(['/mfa-verify']);
-          
-          return;
-        }
-        this.message = "Unexpected login response (no MFA flag)";
-        console.log("WARNING: No MFA flag returned", res);
-        },
-        
-      error: (err) => {
-      console.log("LOGIN ERROR:", err);
-        this.message = "Invalid Credentials";
+      if (res.mfaRequired) {
+        this.mfaRequired = true;
+        this.userIdFromMfa = res.userId;
+        return;
       }
+      
+      this.handleLoginSucess(res)
     });
+  }
+  
+  verifyOtp() {
+  
+    if (!this.userIdFromMfa) return;
+    
+    this.authService.verifyMfa({
+      userId: this.userIdFromMfa,
+      opt: this.otp
+    }).subscribe((res: any) => {
+      
+      this.handleLoginSuccess(res);
+      
+      this.mfaRequired = false
+      this.userIdFromMfa = null;
+      this.otp = '';
+    });
+  }
+  
+  private handleLoginSuccess(res: any) {
+    
+    this.authService.setToken(res.token);
+    this.authService.setUser(res.user);
+    
+    console.log('LOGIN COMPLETE:', res.user);
   }
 }

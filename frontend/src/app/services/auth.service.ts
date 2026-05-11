@@ -119,4 +119,11 @@ export class AuthService {
     
     return user.role === 'admin' || user.userId === resourceUserId;
   }
+  
+  verifyMfa(data: {userId: string, otp: string}) {
+    return this.http.post(
+      'http://192.168.10.20:3000/api/mfa/verify',
+      data
+    );
+  }
 }
