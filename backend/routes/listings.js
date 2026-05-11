@@ -6,7 +6,10 @@ const Listing = require('../models/Listing');
 const Comment = require('../models/comment');
 
 const requireAuth = require('../middleware/requireAuth');
-const isListingOwnerOrAdmin = require('../middleware/ownership');
+const {
+    isListingOwnerOrAdmin,
+    isCommentOwnerOrAdmin
+} = require('../middleware/ownership');
 
 //SEARCH listings
 router.get('/search', async (req, res) => {

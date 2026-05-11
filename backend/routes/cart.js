@@ -6,7 +6,7 @@ const Listing = require("../models/Listing");
 const nodemailer = require("nodemailer");
 const User = require("../models/User")
 
-const auth = require("../middleware/authMiddleware")
+const auth = require("../middleware/requireAuth")
 
 router.post("/add", auth, async (req, res) => {
     try {
